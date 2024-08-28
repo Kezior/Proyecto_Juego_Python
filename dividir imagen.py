@@ -31,6 +31,6 @@ def dividir_guardar_imagen(ruta_imagen, carpeta_destino, divisiones_por_columna)
                 contador += 1
 
 print(os.getcwd())
-dividir_guardar_imagen("assets//images//tiles//Dungeon_Tileset.png ", "assets//images//tiles", 10)  #IMPORTANTE COLOCAR BIEN LA CANTIDAD DE COLUMNAS, SIEMPRE ES UNA MAS QUE EN TILED   #Dungeon_Tileset.png    mainlevbuild.png
+dividir_guardar_imagen("assets//images//tiles//Dungeon_Tileset.png ", "assets//images//tiles", 16)  #IMPORTANTE COLOCAR BIEN LA CANTIDAD DE COLUMNAS, SIEMPRE ES UNA MAS QUE EN TILED   #Dungeon_Tileset.png    mainlevbuild.png
 
 
