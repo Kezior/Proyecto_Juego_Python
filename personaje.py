@@ -59,6 +59,14 @@ class Personaje(): #Las clases siempre la primera en mayuscula
             if self.shape.left < constantes.LIMITE_PANTALLA:
                 posicion_pantalla[0] = constantes.LIMITE_PANTALLA - self.shape.left
                 self.shape.left = constantes.LIMITE_PANTALLA
+
+            #Mover la camara a la izquierda o derecha 
+            if self.shape.bottom > (constantes.HEIGHT_WINDOW - constantes.LIMITE_PANTALLA): 
+                posicion_pantalla[1] = (constantes.WIDHT_WINDOW - constantes.LIMITE_PANTALLA) - self.shape.bottom
+                self.shape.right = constantes.WIDHT_WINDOW - constantes.LIMITE_PANTALLA
+            if self.shape.top < constantes.LIMITE_PANTALLA:
+                posicion_pantalla[1] = constantes.LIMITE_PANTALLA - self.shape.top
+                self.shape.left = constantes.LIMITE_PANTALLA
             return posicion_pantalla
 
 
