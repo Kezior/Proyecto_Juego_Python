@@ -117,7 +117,7 @@ def vida_jugador():
         else:
             ventana.blit(corazon_vacio, (8+i*40, 8))
 
-#Creanis un world data que nos servira para crear nuestro escenario del juego 
+#Creamoss un world data que nos servira para crear nuestro escenario del juego 
 world_data = []
 
 #El siguiente for es para que cuando no se entregue nada, dibujo en pantalla un tile en especifico 
