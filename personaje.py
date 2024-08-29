@@ -18,6 +18,10 @@ class Personaje(): #Las clases siempre la primera en mayuscula
         self.tipo = tipo 
 
            
+    def enemigos(self, posicion_pantalla):
+        #Reposicionar enemigos respecto a la posicion de la pantalla o la camara 
+        self.shape.x += posicion_pantalla[0]
+        self.shape.y += posicion_pantalla[1]
 
     def update (self):
         #Comprobar si el personaje ha muerto
@@ -62,11 +66,11 @@ class Personaje(): #Las clases siempre la primera en mayuscula
 
             #Mover la camara a la izquierda o derecha 
             if self.shape.bottom > (constantes.HEIGHT_WINDOW - constantes.LIMITE_PANTALLA): 
-                posicion_pantalla[1] = (constantes.WIDHT_WINDOW - constantes.LIMITE_PANTALLA) - self.shape.bottom
-                self.shape.right = constantes.WIDHT_WINDOW - constantes.LIMITE_PANTALLA
+                posicion_pantalla[1] = (constantes.HEIGHT_WINDOW - constantes.LIMITE_PANTALLA) - self.shape.bottom
+                self.shape.bottom = constantes.HEIGHT_WINDOW - constantes.LIMITE_PANTALLA
             if self.shape.top < constantes.LIMITE_PANTALLA:
                 posicion_pantalla[1] = constantes.LIMITE_PANTALLA - self.shape.top
-                self.shape.left = constantes.LIMITE_PANTALLA
+                self.shape.top = constantes.LIMITE_PANTALLA
             return posicion_pantalla
 
 

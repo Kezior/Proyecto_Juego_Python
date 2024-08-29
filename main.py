@@ -236,10 +236,10 @@ while run == True:
             grupo_damage_text.add(damage_text)
 
     #Actualizar daño
-    grupo_damage_text.update()
+    grupo_damage_text.update(posicion_pantalla)
 
     #Actualizar items 
-    grupo_items.update(jugador)
+    grupo_items.update(posicion_pantalla, jugador)
 
     #Dibujar al mundo 
     world.draw(ventana)
@@ -249,6 +249,7 @@ while run == True:
 
     #Dibujar al enemigo 
     for ene in lista_enemigos:
+        ene.enemigos(posicion_pantalla)
         ene.draw(ventana)
 
     #Dibujar el arma 

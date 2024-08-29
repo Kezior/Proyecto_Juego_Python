@@ -25,7 +25,7 @@ AMARILLO = (255, 255, 0)
 BLANCO = (255, 255, 255)
 
 #Otros 
-VELOCIDAD = 3
+VELOCIDAD = 4  #Velocidad del personaje
 VELOCIDAD_BALAS = 20
 COOLDOWN_BALAS = 200
 FPS = 60
