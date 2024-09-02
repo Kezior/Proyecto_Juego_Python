@@ -31,6 +31,7 @@ pygame.display.set_caption("La Mazmorra") #Se usa para cambiar el nombre de la v
 
 #Variables 
 posicion_pantalla = [0, 0] #Esta sera la que usaremos para las camaras, le damos los valores de 0, 0 que serian eje x y eje y
+nivel = 1   #Que usaremos para diferentes partes del codigo e identificar que nivel estamos usando
 
 #Fuentes que usaremos en el juego 
 font = pygame.font.Font("assets/fonts/Kaph-Regular.ttf", 15)
@@ -95,9 +96,11 @@ ruta_img = "assets\images\items\coin"
 num_coin_images = contar_elementos(ruta_img)
 #print(f"Numero de imagenes de monedas: {num_coin_images}")     #Con esto solo vemos en la terminal el resultado del conteo para saber que la funcion lo esta haciendo correctamente
 for i in range(num_coin_images):
-    img = pygame.image.load(f"assets\images\items\coin\coin_{i+1}.png") #Importante usar el f para usar el f string para poner variables dentro del texto 
+    img = pygame.image.load(f"assets\images\items\coin\coin_{i+1}.png") #Importante usar el f para poner variables dentro del texto 
     img = escalar_img(img, constantes.SCALE_MONEDA)
     coin_images.append(img) 
+
+item_images = [coin_images, [posion_roja]]   #Se comporta como listas, y como la posicion roja es solo una imagen y no un conjunto de imagenes es importante transformarlo en lista o dara error 
 
 #Creamos una funcion que nos permita dibujar en pantalla texto
 def dibujar_texto(texto, fuente, color, x, y):
@@ -136,7 +139,7 @@ with open("niveles/nivel_dangeun.csv", newline= '') as csvfile:   #nivel_test_da
 
 
 world = Mundo()
-world.process_data(world_data, tile_list)
+world.process_data(world_data, tile_list, item_images)
 
 
 #creamos una funcion que dibuje un grid en la pantalla 
@@ -168,13 +171,20 @@ pistola = Weapon(imagen_pistola, imagen_balas)
 grupo_damage_text = pygame.sprite.Group()   #Creamos grupos para poder tener varios sprites al mismo tiempo en la pantalla 
 grupo_balas = pygame.sprite.Group()
 grupo_items = pygame.sprite.Group()
+#Añadir items desde la data del nivel 
+for item in world.lista_item:
+    grupo_items.add(item)
+
+"""
+Esta seria la forma de colocar manuelmente los items, pero es muy tedioso,
+por tanto usaremos en mismo diseño del mapara usando tiles para hacerlo mas sencillo
 
 coin = Item(350, 25, 0, coin_images)   #Con esto usamos la clase creada en el archivo items, clase item donde le damos una posicion y las imagenes
 posion = Item(380, 55, 1, [posion_roja])
 
 grupo_items.add(coin)
 grupo_items.add(posion)
- 
+"""  
 
 #Definir las variables de movimiento del jugador
 mover_arriba = False
@@ -265,6 +275,8 @@ while run == True:
 
     #Dibujar textos
     grupo_damage_text.draw(ventana)
+    #Como dibujar el texto para saber en que nivel vamos 
+    dibujar_texto(f"Nivel: " + str(nivel), font, constantes.BLANCO, constantes.WIDHT_WINDOW/2, 5)
 
     #Dibujar items en pantalla 
     grupo_items.draw(ventana)
