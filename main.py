@@ -55,7 +55,7 @@ for i in range (2): #Usamos el ciclo for para iterar entre las diferentes imagen
 #Enemigos
 directorio_enemigos = "assets\\images\\characters\\enemies"
 tipo_enemigos = nombres_carpetas(directorio_enemigos)
-animacion_enemigos = []
+animaciones_enemigos = []
 for eni in tipo_enemigos:
     lista_temp = []
     ruta_temp = f"assets\\images\\characters\\enemies\\{eni}"
@@ -65,7 +65,8 @@ for eni in tipo_enemigos:
         img_enemigo = escalar_img(img_enemigo, constantes.SCALE_ENEMIGOS)
         lista_temp.append(img_enemigo)
 
-    animacion_enemigos.append(lista_temp)
+    animaciones_enemigos.append(lista_temp)
+    #El numero para identificar que animacion de enemigo se tiene en la lista es la posicion de las carpetas empezando desde 0 en adelante. En la carpeta de "images-characters-enemies"
 
 #Arma 
 imagen_pistola = pygame.image.load(f"assets\\images\\weapons\\arma_1.png").convert_alpha()
@@ -139,7 +140,7 @@ with open("niveles/nivel_dangeun.csv", newline= '') as csvfile:   #nivel_test_da
 
 
 world = Mundo()
-world.process_data(world_data, tile_list, item_images)
+world.process_data(world_data, tile_list, item_images, animaciones_enemigos)
 
 
 #creamos una funcion que dibuje un grid en la pantalla 
@@ -153,16 +154,26 @@ def dibujar_grid():
 #Crear un jugador de la clase personaje
 jugador = Personaje(50,50, animaciones, 50, 1) #Creamos una varable usando la clase que importamos del personaje, dandole las coordenadas x y y dentro del argumento
 
+"""""
+De esta forma estamos creando los enemigos de forma manual pero lo haremos automatico relacionando tiles en el mapa 
 #Crear un enemigo de la clase personaje
 jefe_final = Personaje(400, 300, animacion_enemigos[0], 500, 2) #Importante estamos dando el ultimo dato como el de la energia que debemos entregarlo para la clase personaje 
 honguito = Personaje(200, 200, animacion_enemigos[1], 100, 2) 
 goblin_2 = Personaje(700, 100, animacion_enemigos[2], 100, 2)
+"""
 
 #Crear lista de enemigos 
 lista_enemigos = []
+for ene in world.lista_enemigo:   #Con este for estamos iterando entre la lista de los enemigos de la clase mundo donde estamos guardando todos nuestros enemigos para luego dibujarolos  
+    lista_enemigos.append(ene)
+
+
+""""
+Esta seria la forma manual de crear la lista de enemigos manualmente
 lista_enemigos.append(jefe_final)
 lista_enemigos.append(goblin_2)
 lista_enemigos.append(honguito)
+"""
 
 #Crear un arma de la clase weapon
 pistola = Weapon(imagen_pistola, imagen_balas)

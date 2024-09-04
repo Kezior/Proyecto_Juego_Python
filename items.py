@@ -28,8 +28,6 @@ class Item(pygame.sprite.Sprite):
                     personaje.energia = 100
             self.kill()
 
-
-
         cooldown_animacion = 45  #Esta dado en milesimas de segundo 
         self.image = self.animaciones_list[self.frame_index] 
 
