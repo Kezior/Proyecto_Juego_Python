@@ -130,7 +130,7 @@ for fila in range(constantes.FILAS):
     filas = [23] * constantes.COLUMNAS
     world_data.append(filas)
 
-print(filas)
+#print(filas)
 
 #Cargar el archivo con el nivel 
 with open("niveles/prueba_1.csv", newline= '') as csvfile:   #nivel_test_dangeun.csv      nivel_text.csv    nivel_catacombs_2.csv
