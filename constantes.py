@@ -24,6 +24,7 @@ ROJO = (203, 50, 52)
 AMARILLO = (255, 255, 0)
 BLANCO = (255, 255, 255)
 
+
 #Otros 
 VELOCIDAD = 4  #Velocidad del personaje
 VELOCIDAD_BALAS = 20

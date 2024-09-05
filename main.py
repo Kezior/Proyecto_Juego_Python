@@ -32,6 +32,7 @@ pygame.display.set_caption("La Mazmorra") #Se usa para cambiar el nombre de la v
 #Variables 
 posicion_pantalla = [0, 0] #Esta sera la que usaremos para las camaras, le damos los valores de 0, 0 que serian eje x y eje y
 nivel = 1   #Que usaremos para diferentes partes del codigo e identificar que nivel estamos usando
+BACKGROUND = pygame.image.load("assets/images/fondo/Mapa_120_60.png").convert_alpha()
 
 #Fuentes que usaremos en el juego 
 font = pygame.font.Font("assets/fonts/Kaph-Regular.ttf", 15)
@@ -214,7 +215,8 @@ while run == True:
 
     #Controlar el framerate para controlar el movimiento del personaje
     reloj = pygame.time.Clock()
-    ventana.fill(constantes.COLOR_BG)  #Con el "fill" llenamos la pantalla del color definido
+    #ventana.fill(constantes.BLANCO)    #Con el "fill" llenamos la pantalla del color definido
+    ventana.blit((BACKGROUND), [0, 0])   #Con el "blit" ponemos una imagen de fondo 
 
     dibujar_grid()
 
