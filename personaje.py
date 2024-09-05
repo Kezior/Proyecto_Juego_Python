@@ -1,4 +1,5 @@
 import pygame
+import math
 import constantes
 
 class Personaje(): #Las clases siempre la primera en mayuscula
@@ -18,10 +19,30 @@ class Personaje(): #Las clases siempre la primera en mayuscula
         self.tipo = tipo 
 
            
-    def enemigos(self, posicion_pantalla):
+    def enemigos(self, jugador, posicion_pantalla, obstaculos_tiles):
+        #Variables que usaremos para manejar la posicion de los enemigos
+        ene_dx = 0 
+        ene_dy = 0
+
         #Reposicionar enemigos respecto a la posicion de la pantalla o la camara 
         self.shape.x += posicion_pantalla[0]
         self.shape.y += posicion_pantalla[1]
+
+        #Calculamos la distancia de los enemigos respecto del personaje para determinar cuando nos deben seguir usando pitagoras 
+        distancia = math.sqrt(((self.shape.centerx - jugador.shape.centerx)**2) + (self.shape.centery - jugador.shape.centery)**2 )
+        if distancia < constantes.RANGO:
+            #Condicio que identifica cuando el jugador esta mas a la derecha o izquierda del enemigo y lo persiga o se mueva hacia el 
+            if self.shape.centerx > jugador.shape.centerx:
+                ene_dx = -constantes.VELOCIDAD_ENEMIGOS 
+            if self.shape.centerx < jugador.shape.centerx:
+                ene_dx = constantes.VELOCIDAD_ENEMIGOS
+            #Condicio que identifica cuando el jugador esta arriba o debajo del enemigo y lo persiga o se mueva hacia el 
+            if self.shape.centery > jugador.shape.centery:
+                ene_dy = -constantes.VELOCIDAD_ENEMIGOS  
+            if self.shape.centery < jugador.shape.centery:
+                ene_dy = constantes.VELOCIDAD_ENEMIGOS 
+
+        self.movimiento(ene_dx, ene_dy, obstaculos_tiles)  #Usamos el metodo ya creado de movimiento en el que le entregamos las variables de su posicion y de los obstaculos para que no traspasen paredes 
 
     def update (self):
         #Comprobar si el personaje ha muerto
