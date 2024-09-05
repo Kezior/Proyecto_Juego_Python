@@ -43,7 +43,7 @@ class Personaje(): #Las clases siempre la primera en mayuscula
         interfaz.blit(imagen_flip, self.shape)
         #pygame.draw.rect(interfaz, constantes.COLOR_PERSONAJE, self.shape, 1)   #Estamos dibujando el cuadrado o figura que le asiganamos a la imagen del personaje, meramente para un control visual
 
-    def movimiento(self, delta_x, delta_y): #Como se movera nuestro personaje 
+    def movimiento(self, delta_x, delta_y, obstaculos_tiles): #Como se movera nuestro personaje 
         posicion_pantalla = [0, 0] 
         if delta_x < 0:   #Condicion que le dira al programa cuando se debe invertir el personaje, al saber para donde se esta mviendo en el eje x 
             self.flip = True
@@ -51,7 +51,23 @@ class Personaje(): #Las clases siempre la primera en mayuscula
             self.flip = False
 
         self.shape.x = self.shape.x + delta_x
-        self.shape.y = self.shape.y + delta_y  
+        #Con el siguiente for estamos evaluando en que momento el personaje tiene una colision en el eje x con algun tiled del tipo obstaculo 
+        for obstacle in obstaculos_tiles:
+            if obstacle[1].colliderect(self.shape):   #Ponemos el dato 1 de la lista ya que en la lista de tile_data de la clase mundo el dato 1 es la forma "image_rect"
+                if delta_x > 0:
+                    self.shape.right = obstacle[1].left 
+                if delta_x < 0:
+                    self.shape.left = obstacle[1].right 
+
+        self.shape.y = self.shape.y + delta_y 
+        #Con el siguiente for estamos evaluando en que momento el personaje tiene una colision en el eje y con algun tiled del tipo obstaculo 
+        for obstacle in obstaculos_tiles:
+            if obstacle[1].colliderect(self.shape):   #Ponemos el dato 1 de la lista ya que en la lista de tile_data de la clase mundo el dato 1 es la forma "image_rect"
+                #Importante recordar que para pygame una posicion negativa en y significa que esta subiendo o yendo hacia arriba
+                if delta_y > 0:
+                    self.shape.bottom = obstacle[1].top #Bottom significa fondo / parte de abajo
+                if delta_y < 0:
+                    self.shape.top = obstacle[1].bottom
 
         #Crear la condicion que identifique solo a un tipo de personaje
         if self.tipo == 1:

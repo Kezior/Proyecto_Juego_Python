@@ -8,7 +8,7 @@ obstaculos = []  #Aqui tendremos que colocar los tiles que actuarian como obstac
 class Mundo():
     def __init__(self):
         self.map_tiles = []
-        self.obstaculo_tiles = []
+        self.obstaculos_tiles = []
         self.exit_tile = None #Este lo usaremos para que el personaje pase de un nivel al otro, cuando toque ese tile
         self.lista_item = []
         self.lista_enemigo =[]
@@ -25,7 +25,7 @@ class Mundo():
                 tile_data = [image, image_rect, image_x, image_y]
                 #Agregamos tiles a obstaculos
                 if tile in obstaculos:
-                    self.obstaculo_tiles.append(tile_data)
+                    self.obstaculos_tiles.append(tile_data)
                 
                 #Tile de salida 
                 elif tile == 100:    #El numero es el ID del tile que queremos que funciones como exit 
