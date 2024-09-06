@@ -16,7 +16,9 @@ class Personaje(): #Las clases siempre la primera en mayuscula
         self.image = animaciones[self.frame_index ]
         self.shape = self.image.get_rect()                 #pygame.Rect(0, 0, constantes.WIDHT_PERSONAJE, constantes.HEIGHT_PERSONAJE)   #Le damos una forma, en este caso seria un rectngulo 
         self.shape.center = (x,y) 
-        self.tipo = tipo 
+        self.tipo = tipo
+        self.golpe = False  #Para identificar cuando un jugador sea golpeado
+        self.ultimo_golpe = pygame.time.get_ticks()  #Lo usaremos para el cooldown entre ataques de los enemigos 
 
            
     def enemigos(self, jugador, posicion_pantalla, obstaculos_tiles):
@@ -55,12 +57,25 @@ class Personaje(): #Las clases siempre la primera en mayuscula
 
         self.movimiento(ene_dx, ene_dy, obstaculos_tiles)  #Usamos el metodo ya creado de movimiento en el que le entregamos las variables de su posicion y de los obstaculos para que no traspasen paredes 
 
+        #Atacar al jugador 
+        if distancia < constantes.RANGO_ATAQUE and jugador.golpe == False: 
+            jugador.energia -= 10
+            jugador.golpe = True
+            jugador.ultimo_golpe = pygame.time.get_ticks()
+
     def update (self):
         #Comprobar si el personaje ha muerto
         if self.energia <= 0:   #Creamos esta condicion para limitar la vida de los enemigos que no siga restando y pasar a numeros negativos 
             self.energia = 0 
             self.vivo = False   #Cambiamos la variable que identifica cuando el enemigo llego a su vida 0
             
+        #Timer para poder volver a recibir daño
+        golpe_cooldown = 1000 
+        if self.tipo == 1:
+            if self.golpe == True:
+                if pygame.time.get_ticks() - self.ultimo_golpe > golpe_cooldown:
+                    self.golpe = False
+
         cooldown_animacion = 100
         self.image = self.animaciones[self.frame_index]
         if pygame.time.get_ticks() - self.update_time >= cooldown_animacion:

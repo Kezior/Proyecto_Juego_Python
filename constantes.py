@@ -29,6 +29,7 @@ BLANCO = (255, 255, 255)
 VELOCIDAD = 4  #Velocidad del personaje
 VELOCIDAD_ENEMIGOS = 3 #Velocidad de los enemigos 
 RANGO = 200    #Que usaremos para determinar hasta que punto los enemigos nos detectan
+RANGO_ATAQUE = 20 #Distancia a al que los enemigos empezaran a atacar 
 VELOCIDAD_BALAS = 20
 COOLDOWN_BALAS = 200
 FPS = 60
