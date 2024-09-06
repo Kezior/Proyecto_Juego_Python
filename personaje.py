@@ -20,6 +20,8 @@ class Personaje(): #Las clases siempre la primera en mayuscula
 
            
     def enemigos(self, jugador, posicion_pantalla, obstaculos_tiles):
+        #Lista vacia del clipped_line
+        clipped_line = ()
         #Variables que usaremos para manejar la posicion de los enemigos
         ene_dx = 0 
         ene_dy = 0
@@ -28,9 +30,18 @@ class Personaje(): #Las clases siempre la primera en mayuscula
         self.shape.x += posicion_pantalla[0]
         self.shape.y += posicion_pantalla[1]
 
+        #Crear una linea de vision entre el personaje y los enemigos 
+        linea_de_vision = ((self.shape.centerx, self.shapecentery), (jugador.shape.centerx, jugador.shape.centery))
+
+        #Chequear si hay obstaculos en la line de vision del enemigo con el personaje 
+        for obs in obstaculos_tiles:   #Si vamos al archivo mundo.py en la linea en que definimos los obstaculos, "self.obstaculos_tiles.append(tile_data)" estamos agregando a la lista "tile_data" el cual tiene como parametros: " tile_data = [image, image_rect, image_x, image_y]" y como vemos el dato 1 es image_rect que es la forma. Por eso aca ponemos 1 en los obstaculos, para identificar su forma 
+            if obs[1].clipline(linea_de_vision):   #Este metodo de ".clipline" se usa para verificar colisciones entre una forma y una linea que es este caso serias las posiciones del jugador 
+                clipped_line = obs[1].clipline(linea_de_vision)
+
+
         #Calculamos la distancia de los enemigos respecto del personaje para determinar cuando nos deben seguir usando pitagoras 
         distancia = math.sqrt(((self.shape.centerx - jugador.shape.centerx)**2) + (self.shape.centery - jugador.shape.centery)**2 )
-        if distancia < constantes.RANGO:
+        if not clipped_line and distancia < constantes.RANGO:
             #Condicio que identifica cuando el jugador esta mas a la derecha o izquierda del enemigo y lo persiga o se mueva hacia el 
             if self.shape.centerx > jugador.shape.centerx:
                 ene_dx = -constantes.VELOCIDAD_ENEMIGOS 

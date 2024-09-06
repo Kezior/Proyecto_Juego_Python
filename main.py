@@ -261,7 +261,7 @@ while run == True:
 
     #Actualizar daño
     grupo_damage_text.update(posicion_pantalla)
-
+ 
     #Actualizar items 
     grupo_items.update(posicion_pantalla, jugador)
 
