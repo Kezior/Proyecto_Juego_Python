@@ -122,6 +122,18 @@ def vida_jugador():
         else:
             ventana.blit(corazon_vacio, (8+i*40, 8))
 
+def resetear_mundo():
+    grupo_damage_text.empty()
+    grupo_balas.empty()        
+    grupo_items.empty()
+
+    #crear lista de tile vacias
+    data =[]
+    for fila in range (constantes.FILAS):
+        filas =[2] * constantes.COLUMNAS
+        data.append(filas) 
+    return data  
+
 #Creamoss un world data que nos servira para crear nuestro escenario del juego 
 world_data = []
 
@@ -138,7 +150,6 @@ with open("niveles/prueba_1.csv", newline= '') as csvfile:   #nivel_test_dangeun
     for x, fila in enumerate(reader):
         for y, columna in enumerate(fila):
             world_data[x][y] = int(columna)
-
 
 world = Mundo()
 world.process_data(world_data, tile_list, item_images, animaciones_enemigos)
@@ -234,7 +245,7 @@ while run == True:
         delta_y = constantes.VELOCIDAD   
 
     #Mover al jugador
-    posicion_pantalla = jugador.movimiento(delta_x, delta_y, world.obstaculos_tiles) #Llamando el mecanismo creado en el archivo del personaje para que se mueva 
+    posicion_pantalla, nivel_completado = jugador.movimiento(world.exit_tile, delta_x, delta_y, world.obstaculos_tiles) #Llamando el mecanismo creado en el archivo del personaje para que se mueva 
     #print(posicion_pantalla) #Con este print vemos las coordenadas del jugador, para un control interno
 
 
@@ -276,7 +287,7 @@ while run == True:
         if ene.energia == 0:   #Usamos la caracteristica "energia" de la clase personaje para identificar cuando este llega a 0 
             lista_enemigos.remove(ene)    #Removemos dicho enemigo de la lista en la que se estan imprimiendo los enemigos
         if ene.energia > 0:   #Dejamos esta condicion para que se dibujen en pantalla siempre y cuando su vida no sea 0
-            ene.enemigos(jugador, world.obstaculos_tiles, posicion_pantalla)
+            ene.enemigos(jugador, world.obstaculos_tiles, posicion_pantalla, world.exit_tile)
             ene.draw(ventana)
 
     #Dibujar el arma 
@@ -298,6 +309,31 @@ while run == True:
     #Dibujar items en pantalla 
     grupo_items.draw(ventana)
 
+    #Chequear si el nivel esta completado
+    if nivel_completado == True:
+        if nivel < constantes.NIVEL_MAXIMO:
+            nivel += 1
+            world_data = resetear_mundo()
+            #Cargar el archivo con el nuevo nivel 
+            with open(f"niveles/prueba_{nivel}.csv", newline= '') as csvfile:  #Usamos el f string f"" para identificar el nombre del siguiente nivel que seria la variable nivel 
+                reader = csv.reader(csvfile, delimiter= ',')    #Donde le estamos indicando que tipo de archivo es y como esta delimitado 
+                for x, fila in enumerate(reader):
+                    for y, columna in enumerate(fila):
+                        world_data[x][y] = int(columna)
+
+            world = Mundo()
+            world.process_data(world_data, tile_list, item_images, animaciones_enemigos)
+            jugador.actualizar_coordenadas(constantes.COORDENADAS[str(nivel)])  #Le estaremos entregando las coordenadas de la tupla, que se entra x y y dentor de parentesis 
+
+            #Crear lista de enemigos 
+            lista_enemigos = []
+            for ene in world.lista_enemigo:   #Con este for estamos iterando entre la lista de los enemigos de la clase mundo donde estamos guardando todos nuestros enemigos para luego dibujarolos  
+                lista_enemigos.append(ene)
+
+            #Añadir items desde la data del nivel 
+            for item in world.lista_item:
+                grupo_items.add(item)
+
     for event in pygame.event.get(): #Con el "event.get" de la libreria estariamos obteniendo que fue lo que se hizo: click una tecla etc.
         if event.type == pygame.QUIT:   #Esto estaria evaluando en que momento sucede un evento del tipo salir, por ejemplo la x de la ventana o el alt f4
             run = False
@@ -315,7 +351,7 @@ while run == True:
             if event.key == pygame.K_e:
                 if world.cambiar_puerta(jugador, tile_list):   #Le entregamos a la funcion el jugador ya que evaluamos que tan cerca esta para abirir la puerta y el tile_list para saber que tiles hay
                     print("Puerta Cambiada")
-                    
+
         #Para cuando se suelte la tecla que se esta presionando
         if event.type == pygame.KEYUP: 
             if event.key == pygame.K_a:

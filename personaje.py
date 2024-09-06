@@ -20,8 +20,12 @@ class Personaje(): #Las clases siempre la primera en mayuscula
         self.golpe = False  #Para identificar cuando un jugador sea golpeado
         self.ultimo_golpe = pygame.time.get_ticks()  #Lo usaremos para el cooldown entre ataques de los enemigos 
 
-           
-    def enemigos(self, jugador, posicion_pantalla, obstaculos_tiles):
+
+    def actualizar_coordenadas(self, tupla):
+        self.shape.center = (tupla[0], tupla[1]) 
+
+          
+    def enemigos(self, jugador, posicion_pantalla, obstaculos_tiles, exit_tile):
         #Lista vacia del clipped_line
         clipped_line = ()
         #Variables que usaremos para manejar la posicion de los enemigos
@@ -55,7 +59,7 @@ class Personaje(): #Las clases siempre la primera en mayuscula
             if self.shape.centery < jugador.shape.centery:
                 ene_dy = constantes.VELOCIDAD_ENEMIGOS 
 
-        self.movimiento(ene_dx, ene_dy, obstaculos_tiles)  #Usamos el metodo ya creado de movimiento en el que le entregamos las variables de su posicion y de los obstaculos para que no traspasen paredes 
+        self.movimiento(ene_dx, ene_dy, obstaculos_tiles, exit_tile)  #Usamos el metodo ya creado de movimiento en el que le entregamos las variables de su posicion y de los obstaculos para que no traspasen paredes 
 
         #Atacar al jugador 
         if distancia < constantes.RANGO_ATAQUE and jugador.golpe == False: 
@@ -90,8 +94,9 @@ class Personaje(): #Las clases siempre la primera en mayuscula
         interfaz.blit(imagen_flip, self.shape)
         #pygame.draw.rect(interfaz, constantes.COLOR_PERSONAJE, self.shape, 1)   #Estamos dibujando el cuadrado o figura que le asiganamos a la imagen del personaje, meramente para un control visual
 
-    def movimiento(self, delta_x, delta_y, obstaculos_tiles): #Como se movera nuestro personaje 
+    def movimiento(self, delta_x, delta_y, obstaculos_tiles, exit_tile): #Como se movera nuestro personaje 
         posicion_pantalla = [0, 0] 
+        nivel_completado = False  #Que usaremos pra identificar en que momento el personaje pasara al proximo nivel 
         if delta_x < 0:   #Condicion que le dira al programa cuando se debe invertir el personaje, al saber para donde se esta mviendo en el eje x 
             self.flip = True
         if delta_x > 0:
@@ -118,6 +123,11 @@ class Personaje(): #Las clases siempre la primera en mayuscula
 
         #Crear la condicion que identifique solo a un tipo de personaje
         if self.tipo == 1:
+            #Chequear colision con el tile de salida
+            if exit_tile[1].colliderect(self.shape):
+                nivel_completado = True
+                print("Nivel Completado")
+
             #Actualizar la pantalla basado en la posicion del jugadr 
             #Mover la camara a la izquierda o derecha 
             if self.shape.right > (constantes.WIDHT_WINDOW - constantes.LIMITE_PANTALLA): 
@@ -134,7 +144,8 @@ class Personaje(): #Las clases siempre la primera en mayuscula
             if self.shape.top < constantes.LIMITE_PANTALLA:
                 posicion_pantalla[1] = constantes.LIMITE_PANTALLA - self.shape.top
                 self.shape.top = constantes.LIMITE_PANTALLA
-            return posicion_pantalla
+            
+            return posicion_pantalla,  nivel_completado
 
 
 
