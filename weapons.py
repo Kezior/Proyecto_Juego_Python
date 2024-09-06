@@ -70,7 +70,7 @@ class Bullet(pygame.sprite.Sprite):
         self.delta_x = math.cos(math.radians(self.angulo))*constantes.VELOCIDAD_BALAS
         self.delta_Y = -math.sin(math.radians(self.angulo))*constantes.VELOCIDAD_BALAS
 
-    def update(self, lista_enemigos):
+    def update(self, lista_enemigos, obstaculos_tiles):
         daño = 0 
         pos_daño = None
         self.rect.x += self.delta_x
@@ -88,6 +88,12 @@ class Bullet(pygame.sprite.Sprite):
                 enemigo.energia -= daño 
                 self.kill()                       #Con esto borramos la bala luego de que choque, este emtodo de kill no funciona para los personajes, porque no son del tipo sprite, este solo sirve para el metodo sprite
                 break
+
+        #Verificar si hay colision con algun muro/obstaculo
+        for obs in obstaculos_tiles:
+            if obs[1].colliderect(self.rect):  #Itereamos entre la lista "obstaculos_tiles" tomando el valor [1] ya que este corresponde a la forma de dicho obstaculo y usando ".colliderect" para comparar si choca con la forma de la bala "self.rect"
+                self.kill   #Ya que las balas son sprites, podemos usar el .kill para eliminarlo
+        
         return daño, pos_daño
 
 

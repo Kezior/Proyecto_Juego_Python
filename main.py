@@ -254,7 +254,7 @@ while run == True:
     if bala:
         grupo_balas.add(bala)
     for bala in grupo_balas:
-        damage, pos_damage = bala.update(lista_enemigos)   #Le entregamos la lista de enemigos para que se generen las colisones de las balas con esa lista de enemigos 
+        damage, pos_damage = bala.update(lista_enemigos, world.obstaculos_tiles)   #Le entregamos la lista de enemigos para que se generen las colisones de las balas con esa lista de enemigos 
         if damage:   #Es lo mismo que decir: si damage es distinto de 0 
             damage_text = DamageText(pos_damage.centerx, pos_damage.centery, str(damage), font, constantes.ROJO)
             grupo_damage_text.add(damage_text)
