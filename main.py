@@ -312,7 +312,10 @@ while run == True:
                 mover_arriba = True
             if event.key == pygame.K_s:
                 mover_abajo = True
-
+            if event.key == pygame.K_e:
+                if world.cambiar_puerta(jugador, tile_list):   #Le entregamos a la funcion el jugador ya que evaluamos que tan cerca esta para abirir la puerta y el tile_list para saber que tiles hay
+                    print("Puerta Cambiada")
+                    
         #Para cuando se suelte la tecla que se esta presionando
         if event.type == pygame.KEYUP: 
             if event.key == pygame.K_a:

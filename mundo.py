@@ -4,6 +4,7 @@ from items import Item
 from personaje import Personaje
 
 obstaculos = []  #Aqui tendremos que colocar los tiles que actuarian como obstaculos, como las paredes. Se coloda el ID del tile que vemos en TILED
+puerta_cerrada = []   #Introducimos cada ID del tile que represente una puerta en nuestro mundo 
 
 class Mundo():
     def __init__(self):
@@ -12,6 +13,7 @@ class Mundo():
         self.exit_tile = None #Este lo usaremos para que el personaje pase de un nivel al otro, cuando toque ese tile
         self.lista_item = []
         self.lista_enemigo =[]
+        self.puertas_cerradas_tiles = []
 
     def process_data(self, data, tile_list, item_imagenes, animaciones_enemigos):
         self.level_length = len(data)
@@ -22,11 +24,15 @@ class Mundo():
                 image_x = x * constantes.TILE_SIZE
                 image_y = y * constantes.TILE_SIZE
                 image_rect.center = (image_x, image_y)
-                tile_data = [image, image_rect, image_x, image_y]
+                tile_data = [image, image_rect, image_x, image_y, tile]
                 #Agregamos tiles a obstaculos
                 if tile in obstaculos:
                     self.obstaculos_tiles.append(tile_data)
                 
+                #Tile de puertas 
+                if tile in puerta_cerrada:
+                    self.puertas_cerradas_tiles.append(tile_data)
+
                 #Tile de salida 
                 elif tile == 100:    #El numero es el ID del tile que queremos que funciones como exit 
                     self.exit_tile = tile_data
@@ -61,7 +67,29 @@ class Mundo():
 
                 self.map_tiles.append(tile_data)
 
-    
+    def cambiar_puerta(self, jugador, tile_list):
+        buffer = 50 #Esto representa la proximidad del jugador (en pixeles)
+        proximidad_rect = pygame.Rect(jugador.shape.x - buffer, jugador.shape.y - buffer, jugador.shape.width + 2 * buffer, jugador.shape.height + 2 * buffer)
+        for tile_data in self.map_tiles:
+            image, rect, x, y, tile_type = tile_data
+            if proximidad_rect.colliderect(rect):
+                if tile_type in puerta_cerrada:
+                    if tile_type == 36 or tile_type == 66:   #Estos numeros son el ID de las puertas del lado derecho
+                        new_tile_type = 57     #Puerta abierta del lado derecho
+                    elif tile_type == 37 or tile_type == 67:  #Estos numeros son el ID de las puertas del lado derecho
+                        new_tile_type = 58    #Puerta abierta del lado derecho
+                    
+                    tile_data[-1] = new_tile_type  #El -1 de la lista significa el ultimo valor de la lista del tile_data, tambien se podria usar la posicion normal ej: 5 o 6
+                    tile_data[0] = tile_list[new_tile_type]
+
+                    #Eliminar el tile de la lista de colisones 
+                    if tile_data in self.obstaculos_tiles:
+                        self.obstaculos_tiles.remove(tile_data)
+
+                    return True
+        return False
+
+
     def update(self, posicion_pantalla):
         for tile in self.map_tiles:
             tile[2] += posicion_pantalla[0]
