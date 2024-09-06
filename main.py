@@ -273,8 +273,11 @@ while run == True:
 
     #Dibujar al enemigo 
     for ene in lista_enemigos:
-        ene.enemigos(jugador, world.obstaculos_tiles, posicion_pantalla)
-        ene.draw(ventana)
+        if ene.energia == 0:   #Usamos la caracteristica "energia" de la clase personaje para identificar cuando este llega a 0 
+            lista_enemigos.remove(ene)    #Removemos dicho enemigo de la lista en la que se estan imprimiendo los enemigos
+        if ene.energia > 0:   #Dejamos esta condicion para que se dibujen en pantalla siempre y cuando su vida no sea 0
+            ene.enemigos(jugador, world.obstaculos_tiles, posicion_pantalla)
+            ene.draw(ventana)
 
     #Dibujar el arma 
     pistola.draw(ventana)
