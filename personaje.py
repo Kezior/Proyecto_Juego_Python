@@ -33,7 +33,7 @@ class Personaje(): #Las clases siempre la primera en mayuscula
         self.shape.y += posicion_pantalla[1]
 
         #Crear una linea de vision entre el personaje y los enemigos 
-        linea_de_vision = ((self.shape.centerx, self.shapecentery), (jugador.shape.centerx, jugador.shape.centery))
+        linea_de_vision = ((self.shape.centerx, self.shape.centery), (jugador.shape.centerx, jugador.shape.centery))
 
         #Chequear si hay obstaculos en la line de vision del enemigo con el personaje 
         for obs in obstaculos_tiles:   #Si vamos al archivo mundo.py en la linea en que definimos los obstaculos, "self.obstaculos_tiles.append(tile_data)" estamos agregando a la lista "tile_data" el cual tiene como parametros: " tile_data = [image, image_rect, image_x, image_y]" y como vemos el dato 1 es image_rect que es la forma. Por eso aca ponemos 1 en los obstaculos, para identificar su forma 
