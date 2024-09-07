@@ -245,7 +245,7 @@ while run == True:
         delta_y = constantes.VELOCIDAD   
 
     #Mover al jugador
-    posicion_pantalla, nivel_completado = jugador.movimiento(world.exit_tile, delta_x, delta_y, world.obstaculos_tiles) #Llamando el mecanismo creado en el archivo del personaje para que se mueva 
+    posicion_pantalla, nivel_completado = jugador.movimiento(delta_x, delta_y, world.obstaculos_tiles, world.exit_tile) #Llamando el mecanismo creado en el archivo del personaje para que se mueva 
     #print(posicion_pantalla) #Con este print vemos las coordenadas del jugador, para un control interno
 
 
