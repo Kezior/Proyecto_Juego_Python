@@ -145,14 +145,14 @@ for fila in range(constantes.FILAS):
 #print(filas)
 
 #Cargar el archivo con el nivel 
-with open("niveles/nivel_1.csv", newline= '') as csvfile:   #nivel_test_dangeun.csv      nivel_text.csv    nivel_catacombs_2.csv
+with open("niveles/prueba_1.csv", newline= '') as csvfile:   #nivel_test_dangeun.csv      nivel_text.csv    nivel_catacombs_2.csv
     reader = csv.reader(csvfile, delimiter= ',')    #Donde le estamos indicando que tipo de archivo es y como esta delimitado 
     for x, fila in enumerate(reader):
         for y, columna in enumerate(fila):
             world_data[x][y] = int(columna)
 
 world = Mundo()
-world.process_data(world_data, tile_list, item_images, animaciones_enemigos)
+world.process_data(tile_list, item_images, animaciones_enemigos, world_data)
 
 
 #creamos una funcion que dibuje un grid en la pantalla 

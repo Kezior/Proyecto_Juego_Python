@@ -12,7 +12,7 @@ SCALE_POSION = 0.8
 SCALE_MONEDA = 1.3
 TILE_SIZE = 40 
 TILE_TYPE = 1920       #ES LA CANTIDAD DE TILES QUE SE TIENE EN LA CARPETA 
-FILAS = 60 
+FILAS = 240 
 COLUMNAS = 240 
 LIMITE_PANTALLA = 200        #Jugamos con esto, modifica en que momento se movera la camara para seguir al personaje 
 
