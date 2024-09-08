@@ -133,7 +133,7 @@ for fila in range(constantes.FILAS):
 #print(filas)
 
 #Cargar el archivo con el nivel 
-with open("niveles/prueba_1.csv", newline= '') as csvfile:   #nivel_test_dangeun.csv      nivel_text.csv    nivel_catacombs_2.csv
+with open("niveles/prueba1111.csv", newline= '') as csvfile:   #nivel_test_dangeun.csv      nivel_text.csv    nivel_catacombs_2.csv
     reader = csv.reader(csvfile, delimiter= ',')    #Donde le estamos indicando que tipo de archivo es y como esta delimitado 
     for x, fila in enumerate(reader):
         for y, columna in enumerate(fila):
@@ -276,7 +276,7 @@ while run == True:
         if ene.energia == 0:   #Usamos la caracteristica "energia" de la clase personaje para identificar cuando este llega a 0 
             lista_enemigos.remove(ene)    #Removemos dicho enemigo de la lista en la que se estan imprimiendo los enemigos
         if ene.energia > 0:   #Dejamos esta condicion para que se dibujen en pantalla siempre y cuando su vida no sea 0
-            ene.enemigos(jugador, world.obstaculos_tiles, posicion_pantalla)
+            ene.enemigos(jugador, posicion_pantalla, world.obstaculos_tiles)
             ene.draw(ventana)
 
     #Dibujar el arma 
