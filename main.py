@@ -339,6 +339,7 @@ while run == True:
             for item in world.lista_item:
                 grupo_items.add(item)
 
+    #Crear ventana de game over 
     if jugador.vivo == False:
         ventana.fill(constantes.ROJO_OSCURO) 
         text_rect = game_over_text.get_rect(center=(constantes.WIDHT_WINDOW / 2, constantes.HEIGHT_WINDOW / 2))

@@ -59,7 +59,7 @@ class Mundo():
 
                 #Condicion para crear o generar un enemigo del tipo (Nombre del enemigo)
                 elif tile ==  77:   #Importante este numero es el ID del tile que identificamos para nuestro personaje dentro del tileset y que ponemos en el mapa 
-                    jefe_final1 = Personaje(image_x, image_y, animaciones_enemigos[0], 300, 2)    #Importante recordar que en las animaciones "[x]" es el numero con el que estamos identificando, el 200 es la energia o vida que le asignamos, y el ultimo dato es el tipo de enemigo de esta clase que tambien depende de como los estemos identificando en el archivo personaje.py
+                    jefe_final1 = Personaje(image_x, image_y, animaciones_enemigos[1], 300, 2)    #Importante recordar que en las animaciones "[x]" es el numero con el que estamos identificando, el 200 es la energia o vida que le asignamos, y el ultimo dato es el tipo de enemigo de esta clase que tambien depende de como los estemos identificando en el archivo personaje.py
                     #Importante, en la lista de animaciones_enemigos, que podemos ver en el main, cuando cargamos las imagenes de los "enemigos" el numero se esta tomando de la posicion de la lista, la cual es la misma que como se tienen las carpetas en los archivos del juego 
                     self.lista_enemigo.append(jefe_final1)
                     #Recordar que tenemos que agregar a la lista el enemigo en cuestion (en este caso el jefe_final1)
