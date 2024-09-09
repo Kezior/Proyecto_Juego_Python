@@ -32,10 +32,13 @@ pygame.display.set_caption("La Mazmorra") #Se usa para cambiar el nombre de la v
 #Variables 
 posicion_pantalla = [0, 0] #Esta sera la que usaremos para las camaras, le damos los valores de 0, 0 que serian eje x y eje y
 nivel = 1   #Que usaremos para diferentes partes del codigo e identificar que nivel estamos usando
-BACKGROUND = pygame.image.load("assets/images/fondo/Mapa_120_60.png").convert_alpha()
+background_nivel_1 = pygame.image.load(constantes.BACKGROUND).convert_alpha()
 
 #Fuentes que usaremos en el juego 
 font = pygame.font.Font("assets/fonts/Kaph-Regular.ttf", 15)
+font_game_over = pygame.font.Font("assets/fonts/Kaph-Regular.ttf", 70) #CReamos una fuente especifica para la pantalla de game over, en realidad usamos la misma pero se le cambio el tamaño
+
+game_over_text = font_game_over.render("Game Over", True, constantes.BLANCO)
 
 #Aca estamos importando las imagenes
 #Vida 
@@ -151,7 +154,6 @@ with open("niveles/prueba1111.csv", newline= '') as csvfile:   #nivel_test_dange
         for y, columna in enumerate(fila):
             world_data[x][y] = int(columna)
 
-
 world = Mundo()
 world.process_data(world_data, tile_list, item_images, animaciones_enemigos)
 
@@ -228,53 +230,56 @@ while run == True:
     #Controlar el framerate para controlar el movimiento del personaje
     reloj = pygame.time.Clock()
     #ventana.fill(constantes.BLANCO)    #Con el "fill" llenamos la pantalla del color definido
-    ventana.blit((BACKGROUND), [0, 0])   #Con el "blit" ponemos una imagen de fondo 
+    ventana.blit((background_nivel_1), [0, 0])   #Con el "blit" ponemos una imagen de fondo 
 
-    dibujar_grid()
+    if jugador.vivo == True:
 
-    #Calcular el movimiento del jugador
-    delta_x = 0
-    delta_y = 0
+        dibujar_grid()
 
-    if mover_derecha == True:
-        delta_x = constantes.VELOCIDAD  #Se puso la velocidad como una constante para que sea mas sencillo en el caso de querer cambiarlo
-    if mover_izquierda == True:
-        delta_x = -constantes.VELOCIDAD
-    if mover_arriba == True:
-        delta_y = -constantes.VELOCIDAD
-    if mover_abajo == True:
-        delta_y = constantes.VELOCIDAD   
+        #Calcular el movimiento del jugador
+        delta_x = 0
+        delta_y = 0
 
-    #Mover al jugador
-    posicion_pantalla, nivel_completado = jugador.movimiento(delta_x, delta_y, world.obstaculos_tiles, world.exit_tile) #Llamando el mecanismo creado en el archivo del personaje para que se mueva 
-    #print(posicion_pantalla) #Con este print vemos las coordenadas del jugador, para un control interno
+        if mover_derecha == True:
+            delta_x = constantes.VELOCIDAD  #Se puso la velocidad como una constante para que sea mas sencillo en el caso de querer cambiarlo
+        if mover_izquierda == True:
+            delta_x = -constantes.VELOCIDAD
+        if mover_arriba == True:
+            delta_y = -constantes.VELOCIDAD
+        if mover_abajo == True:
+            delta_y = constantes.VELOCIDAD   
 
-    #Actualizar mapa
-    world.update(posicion_pantalla)
+        #Mover al jugador
+        posicion_pantalla, nivel_completado = jugador.movimiento(delta_x, delta_y, world.obstaculos_tiles, world.exit_tile) #Llamando el mecanismo creado en el archivo del personaje para que se mueva 
+        #print(posicion_pantalla) #Con este print vemos las coordenadas del jugador, para un control interno
 
-    #Actualiza el estado del jugador 
-    jugador.update()
 
-    #Actualiza el estado del enemigo 
-    for ene in lista_enemigos:
-        ene.update()
-        #print(ene.energia)    #Con esto visualizamos la vida de cada entidad en la terminal 
+        #Actualizar mapa
+        world.update(posicion_pantalla)
 
-    #Actualiza el estado del arma 
-    bala = pistola.update(jugador)
-    if bala:
-        grupo_balas.add(bala)
-    for bala in grupo_balas:
-        damage, pos_damage = bala.update(lista_enemigos, world.obstaculos_tiles)   #Le entregamos la lista de enemigos para que se generen las colisones de las balas con esa lista de enemigos 
-        if damage:   #Es lo mismo que decir: si damage es distinto de 0 
-            damage_text = DamageText(pos_damage.centerx, pos_damage.centery, str(damage), font, constantes.ROJO)
-            grupo_damage_text.add(damage_text)
+        #Actualiza el estado del jugador 
+        jugador.update()
 
-    #Actualizar daño
-    grupo_damage_text.update(posicion_pantalla)
- 
-    #Actualizar items 
-    grupo_items.update(posicion_pantalla, jugador)
+        #Actualiza el estado del enemigo 
+        for ene in lista_enemigos:
+            ene.update()
+            #print(ene.energia)    #Con esto visualizamos la vida de cada entidad en la terminal 
+
+        #Actualiza el estado del arma 
+        bala = pistola.update(jugador)
+        if bala:
+            grupo_balas.add(bala)
+        for bala in grupo_balas:
+            damage, pos_damage = bala.update(lista_enemigos, world.obstaculos_tiles)   #Le entregamos la lista de enemigos para que se generen las colisones de las balas con esa lista de enemigos 
+            if damage:   #Es lo mismo que decir: si damage es distinto de 0 
+                damage_text = DamageText(pos_damage.centerx, pos_damage.centery, str(damage), font, constantes.ROJO)
+                grupo_damage_text.add(damage_text)
+
+        #Actualizar daño
+        grupo_damage_text.update(posicion_pantalla)
+    
+        #Actualizar items 
+        grupo_items.update(posicion_pantalla, jugador)
 
     #Dibujar al mundo 
     world.draw(ventana)
@@ -333,6 +338,12 @@ while run == True:
             #Añadir items desde la data del nivel 
             for item in world.lista_item:
                 grupo_items.add(item)
+
+    if jugador.vivo == False:
+        ventana.fill(constantes.ROJO_OSCURO) 
+        text_rect = game_over_text.get_rect(center=(constantes.WIDHT_WINDOW / 2, constantes.HEIGHT_WINDOW / 2))
+
+        ventana.blit(game_over_text, text_rect)
 
     for event in pygame.event.get(): #Con el "event.get" de la libreria estariamos obteniendo que fue lo que se hizo: click una tecla etc.
         if event.type == pygame.QUIT:   #Esto estaria evaluando en que momento sucede un evento del tipo salir, por ejemplo la x de la ventana o el alt f4
