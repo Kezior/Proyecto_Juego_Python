@@ -92,7 +92,7 @@ class Bullet(pygame.sprite.Sprite):
         #Verificar si hay colision con algun muro/obstaculo
         for obs in obstaculos_tiles:
             if obs[1].colliderect(self.rect):  #Itereamos entre la lista "obstaculos_tiles" tomando el valor [1] ya que este corresponde a la forma de dicho obstaculo y usando ".colliderect" para comparar si choca con la forma de la bala "self.rect"
-                self.kill   #Ya que las balas son sprites, podemos usar el .kill para eliminarlo
+                self.kill()   #Ya que las balas son sprites, podemos usar el .kill para eliminarlo
         
         return daño, pos_daño
 
