@@ -3,7 +3,7 @@ import constantes
 from items import Item
 from personaje import Personaje
 
-obstaculos = [100,101]  #Aqui tendremos que colocar los tiles que actuarian como obstaculos, como las paredes. Se coloda el ID del tile que vemos en TILED
+obstaculos = [101]  #Aqui tendremos que colocar los tiles que actuarian como obstaculos, como las paredes. Se coloda el ID del tile que vemos en TILED
 puerta_cerrada = []   #Introducimos cada ID del tile que represente una puerta en nuestro mundo 
 
 class Mundo():
@@ -34,7 +34,7 @@ class Mundo():
                     self.puertas_cerradas_tiles.append(tile_data)
 
                 #Tile de salida 
-                elif tile == 100:    #El numero es el ID del tile que queremos que funciones como exit 
+                elif tile == 1197:    #El numero es el ID del tile que queremos que funciones como exit 
                     self.exit_tile = tile_data
                 
                 #Condicion para crear las monedas
