@@ -93,13 +93,11 @@ class Bullet(pygame.sprite.Sprite):
         for obs in obstaculos_tiles:
             if obs[1].colliderect(self.rect):  #Itereamos entre la lista "obstaculos_tiles" tomando el valor [1] ya que este corresponde a la forma de dicho obstaculo y usando ".colliderect" para comparar si choca con la forma de la bala "self.rect"
                 self.kill()   #Ya que las balas son sprites, podemos usar el .kill para eliminarlo
-        
+                break 
+
         return daño, pos_daño
 
 
     def draw(self, interfaz):
         interfaz.blit(self.image, (self.rect.centerx, self.rect.centery - int(self.image.get_height()/1.2)))
         #pygame.draw.rect(interfaz, constantes.COLOR_ARMA, self.rect, 1)   #Estamos dibujando el cuadrado o figura que le asiganamos a la imagen de la bala, meramente para un control visual
-
-
-

@@ -4,7 +4,7 @@ from items import Item
 from personaje import Personaje
 
 obstaculos = [101]  #Aqui tendremos que colocar los tiles que actuarian como obstaculos, como las paredes. Se coloda el ID del tile que vemos en TILED
-puerta_cerrada = []   #Introducimos cada ID del tile que represente una puerta en nuestro mundo 
+puerta_cerrada = []   #Introducimos cada ID del tile que represente una puerta en nuestro mundo        #Introducimos cada ID del tile que represente una salida en nuestro mundo 
 
 class Mundo():
     def __init__(self):

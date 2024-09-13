@@ -124,9 +124,10 @@ class Personaje(): #Las clases siempre la primera en mayuscula
         #Crear la condicion que identifique solo a un tipo de personaje
         if self.tipo == 1:
             #Chequear colision con el tile de salida
-            if exit_tile[1].colliderect(self.shape):
-                nivel_completado = True
-                print("Nivel Completado")
+            if exit_tile is not None:
+                if exit_tile[1].colliderect(self.shape):
+                    nivel_completado = True
+                    print("Nivel Completado")
 
             #Actualizar la pantalla basado en la posicion del jugadr 
             #Mover la camara a la izquierda o derecha 
@@ -146,7 +147,3 @@ class Personaje(): #Las clases siempre la primera en mayuscula
                 self.shape.top = constantes.LIMITE_PANTALLA
 
             return posicion_pantalla, nivel_completado
-
-
-
-

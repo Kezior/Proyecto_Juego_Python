@@ -37,8 +37,10 @@ background_nivel_1 = pygame.image.load(constantes.BACKGROUND).convert_alpha()
 #Fuentes que usaremos en el juego 
 font = pygame.font.Font("assets/fonts/Kaph-Regular.ttf", 15)
 font_game_over = pygame.font.Font("assets/fonts/Kaph-Regular.ttf", 70) #CReamos una fuente especifica para la pantalla de game over, en realidad usamos la misma pero se le cambio el tamaño
+font_reinicio = pygame.font.Font("assets/fonts/Kaph-Regular.ttf", 20)
 
 game_over_text = font_game_over.render("Game Over", True, constantes.BLANCO)
+texto_boton_reinicio = font_reinicio.render("Reiniciar", True, constantes.NEGRO)
 
 #Aca estamos importando las imagenes
 #Vida 
@@ -146,14 +148,14 @@ for fila in range(constantes.FILAS):
     world_data.append(filas)
 
 #print(filas)
-'''
+
 #Cargar el archivo con el nivel 
 with open("niveles/prueba_1.csv", newline= '') as csvfile:   #nivel_test_dangeun.csv      nivel_text.csv    nivel_catacombs_2.csv
     reader = csv.reader(csvfile, delimiter= ',')    #Donde le estamos indicando que tipo de archivo es y como esta delimitado 
     for x, fila in enumerate(reader):
         for y, columna in enumerate(fila):
             world_data[x][y] = int(columna)
-'''
+
 world = Mundo()
 world.process_data(world_data, tile_list, item_images, animaciones_enemigos)
 
@@ -221,6 +223,9 @@ mover_derecha = False
 #Controlar el framerate para controlar el movimiento del personaje
 reloj = pygame.time.Clock()
 
+#Boton de reinicio
+boton_reinicio = pygame.Rect(constantes.WIDHT_WINDOW / 2 - 100, constantes.HEIGHT_WINDOW / 2 + 100, 200, 50)
+
 run = True  #Creamos el bucle general del juego
 while run == True:
 
@@ -254,7 +259,7 @@ while run == True:
         #print(posicion_pantalla) #Con este print vemos las coordenadas del jugador, para un control interno
 
 
-        #Actualizar mapa
+        #Actualizar mapas
         world.update(posicion_pantalla)
 
         #Actualiza el estado del jugador 
@@ -339,12 +344,14 @@ while run == True:
             for item in world.lista_item:
                 grupo_items.add(item)
 
-    #Crear ventana de game over 
+    #Crear ventana de game over
     if jugador.vivo == False:
-        ventana.fill(constantes.ROJO_OSCURO) 
-        text_rect = game_over_text.get_rect(center=(constantes.WIDHT_WINDOW / 2, constantes.HEIGHT_WINDOW / 2))
+        ventana.fill(constantes.ROJO_OSCURO)
+        text_rect = game_over_text.get_rect(center=(constantes.WIDHT_WINDOW / 2, constantes.HEIGHT_WINDOW / 2))    
 
         ventana.blit(game_over_text, text_rect)
+        pygame.draw.rect(ventana, constantes.AMARILLO, boton_reinicio)
+        ventana.blit(texto_boton_reinicio, (boton_reinicio.x + 40, boton_reinicio.y + 10))
 
     for event in pygame.event.get(): #Con el "event.get" de la libreria estariamos obteniendo que fue lo que se hizo: click una tecla etc.
         if event.type == pygame.QUIT:   #Esto estaria evaluando en que momento sucede un evento del tipo salir, por ejemplo la x de la ventana o el alt f4
@@ -374,6 +381,33 @@ while run == True:
                 mover_arriba = False
             if event.key == pygame.K_s:
                 mover_abajo = False
+
+        if event.type == pygame.MOUSEBUTTONDOWN:
+                    if boton_reinicio.collidepoint(event.pos) and not jugador.vivo:
+                        jugador.vivo = True
+                        jugador.energia = 100 
+                        jugador.score = 0
+                        nivel = 1
+                        world_data = resetear_mundo()
+                        #Cargar de nuevo el archivo del nivel 
+                        with open(f"niveles/prueba_{nivel}.csv", newline= '') as csvfile:  
+                            reader = csv.reader(csvfile, delimiter= ',')    
+                            for x, fila in enumerate(reader):
+                                for y, columna in enumerate(fila):
+                                    world_data[x][y] = int(columna)
+                        world = Mundo()
+                        world.process_data(world_data, tile_list, item_images, animaciones_enemigos)
+                        jugador.actualizar_coordenadas(constantes.COORDENADAS[str(nivel)])
+
+                        #Crear de nuevo la lista de enemigos 
+                        lista_enemigos = []
+                        for ene in world.lista_enemigo:   #Con este for estamos iterando entre la lista de los enemigos de la clase mundo donde estamos guardando todos nuestros enemigos para luego dibujarolos  
+                            lista_enemigos.append(ene)
+
+                        #Añadir de nuevo los items desde la data del nivel 
+                        for item in world.lista_item:
+                            grupo_items.add(item)
+
 
     pygame.display.update()  #Es necesario ya que esto mantendr las actualizaciones que se hagan en el programa, mantener los cambios de la pantalla: dibujar objetos, actualizar imagenes etc. 
 
