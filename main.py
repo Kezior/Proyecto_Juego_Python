@@ -1,3 +1,4 @@
+# Fear And Dungeuns
 import pygame 
 import constantes
 from personaje import Personaje
@@ -35,7 +36,7 @@ nivel = 1   #Que usaremos para diferentes partes del codigo e identificar que ni
 background_nivel_1 = pygame.image.load(constantes.BACKGROUND).convert_alpha()
 
 #Fuentes que usaremos en el juego 
-font = pygame.font.Font("assets/fonts/Kaph-Regular.ttf", 15)
+font = pygame.font.Font("assets/fonts/Kaph-Regular.ttf", 30)
 font_game_over = pygame.font.Font("assets/fonts/Kaph-Regular.ttf", 70) #CReamos una fuente especifica para la pantalla de game over, en realidad usamos la misma pero se le cambio el tamaño
 font_reinicio = pygame.font.Font("assets/fonts/Kaph-Regular.ttf", 20)
 
@@ -169,7 +170,7 @@ def dibujar_grid():
 
 
 #Crear un jugador de la clase personaje
-jugador = Personaje(50,50, animaciones, 50, 1) #Creamos una varable usando la clase que importamos del personaje, dandole las coordenadas x y y dentro del argumento
+jugador = Personaje(800,2200, animaciones, 50, 1) #Creamos una varable usando la clase que importamos del personaje, dandole las coordenadas x y y dentro del argumento
 
 """""
 De esta forma estamos creando los enemigos de forma manual pero lo haremos automatico relacionando tiles en el mapa 
@@ -239,7 +240,7 @@ while run == True:
 
     if jugador.vivo == True:
 
-        dibujar_grid()
+        #dibujar_grid()
 
         #Calcular el movimiento del jugador
         delta_x = 0
@@ -309,7 +310,7 @@ while run == True:
 
     #Dibujar los corazones 
     vida_jugador()
-    dibujar_texto(f"Score: {jugador.score}", font, constantes.AMARILLO, 700, 5)
+    dibujar_texto(f"Score: {jugador.score}", font, constantes.AMARILLO, 1700, 5)
 
     #Dibujar textos
     grupo_damage_text.draw(ventana)

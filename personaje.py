@@ -131,10 +131,10 @@ class Personaje(): #Las clases siempre la primera en mayuscula
 
             #Actualizar la pantalla basado en la posicion del jugadr 
             #Mover la camara a la izquierda o derecha 
-            if self.shape.right > (constantes.WIDHT_WINDOW - constantes.LIMITE_PANTALLA): 
+            if self.shape.right > (constantes.WIDHT_WINDOW - constantes.LIMITE_PANTALLA * 2): 
                 posicion_pantalla[0] = (constantes.WIDHT_WINDOW - constantes.LIMITE_PANTALLA) - self.shape.right
                 self.shape.right = constantes.WIDHT_WINDOW - constantes.LIMITE_PANTALLA
-            if self.shape.left < constantes.LIMITE_PANTALLA:
+            if self.shape.left < 2 * constantes.LIMITE_PANTALLA:
                 posicion_pantalla[0] = constantes.LIMITE_PANTALLA - self.shape.left
                 self.shape.left = constantes.LIMITE_PANTALLA
 

@@ -1,20 +1,20 @@
 #Tamñano y escalas
-HEIGHT_WINDOW  = 800  #Alto 
-WIDHT_WINDOW = 1000    #Ancho
+HEIGHT_WINDOW  = 1080  #Alto 
+WIDHT_WINDOW = 1920    #Ancho
 #HEIGHT_PERSONAJE = 20 
 #WIDHT_PERSONAJE = 20 
 SCALE_PERSONAJE = 1.2
 SCALE_ENEMIGOS = 0.7
 SCALE_ARMA = 0.03
 SCALE_BALA = 0.02
-SCALE_CORAZON = 1.5
+SCALE_CORAZON = 3
 SCALE_POSION = 0.8
 SCALE_MONEDA = 1.3
 TILE_SIZE = 40 
 TILE_TYPE = 1920       #ES LA CANTIDAD DE TILES QUE SE TIENE EN LA CARPETA 
 FILAS = 240 
 COLUMNAS = 240 
-LIMITE_PANTALLA = 200        #Jugamos con esto, modifica en que momento se movera la camara para seguir al personaje 
+LIMITE_PANTALLA = 500        #Jugamos con esto, modifica en que momento se movera la camara para seguir al personaje 
 
 #Colores
 COLOR_PERSONAJE= (255, 255, 0)
