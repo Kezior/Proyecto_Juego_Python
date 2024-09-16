@@ -151,7 +151,7 @@ for fila in range(constantes.FILAS):
 #print(filas)
 
 #Cargar el archivo con el nivel 
-with open("niveles/prueba_1.csv", newline= '') as csvfile:   #nivel_test_dangeun.csv      nivel_text.csv    nivel_catacombs_2.csv
+with open("niveles/nivel_1.csv", newline= '') as csvfile:   #nivel_test_dangeun.csv      nivel_text.csv    nivel_catacombs_2.csv
     reader = csv.reader(csvfile, delimiter= ',')    #Donde le estamos indicando que tipo de archivo es y como esta delimitado 
     for x, fila in enumerate(reader):
         for y, columna in enumerate(fila):
@@ -326,7 +326,7 @@ while run == True:
             nivel += 1
             world_data = resetear_mundo()
             #Cargar el archivo con el nuevo nivel 
-            with open(f"niveles/prueba_{nivel}.csv", newline= '') as csvfile:  #Usamos el f string f"" para identificar el nombre del siguiente nivel que seria la variable nivel 
+            with open(f"niveles/nivel_{nivel}.csv", newline= '') as csvfile:  #Usamos el f string f"" para identificar el nombre del siguiente nivel que seria la variable nivel 
                 reader = csv.reader(csvfile, delimiter= ',')    #Donde le estamos indicando que tipo de archivo es y como esta delimitado 
                 for x, fila in enumerate(reader):
                     for y, columna in enumerate(fila):
