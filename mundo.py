@@ -119,3 +119,8 @@ class Mundo():
             
 
     def draw(self, surface):
+        for tile in self.capa_fondo:
+            surface.blit(tile[0], tile[1])  
+        for tile in self.capa_principal:
+            surface.blit(tile[0], tile[1])   
+    
