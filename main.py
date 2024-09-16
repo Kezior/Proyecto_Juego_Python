@@ -140,6 +140,22 @@ def resetear_mundo():
         data.append(filas) 
     return data 
 
+
+# Cargar los archivos CSV
+def cargar_csv(archivo):
+    data = []
+    with open(archivo, newline='') as csvfile:
+        reader = csv.reader(csvfile, delimiter=',')
+        for row in reader:
+            data.append([int(tile) for tile in row])
+    return data
+
+# En el bucle principal o donde inicializas el nivel
+world_data_fondo = cargar_csv(f"niveles/nivel_{nivel}_fondo.csv")
+world_data_principal = cargar_csv(f"niveles/nivel_{nivel}_principal.csv")
+
+
+'''
 #Creamoss un world data que nos servira para crear nuestro escenario del juego 
 world_data = []
 
@@ -150,15 +166,23 @@ for fila in range(constantes.FILAS):
 
 #print(filas)
 
-#Cargar el archivo con el nivel 
-with open("niveles/nivel_1.csv", newline= '') as csvfile:   #nivel_test_dangeun.csv      nivel_text.csv    nivel_catacombs_2.csv
+#Cargar el archivo con el nivel - Principal
+with open("niveles/nivel_principal_1.csv", newline= '') as csvfile:   #nivel_test_dangeun.csv      nivel_text.csv    nivel_catacombs_2.csv
     reader = csv.reader(csvfile, delimiter= ',')    #Donde le estamos indicando que tipo de archivo es y como esta delimitado 
     for x, fila in enumerate(reader):
         for y, columna in enumerate(fila):
             world_data[x][y] = int(columna)
 
+#Cargar el archivo con el nivel - Fondo 
+with open("niveles/nivel_fondo_1.csv", newline= '') as csvfile:   #nivel_test_dangeun.csv      nivel_text.csv    nivel_catacombs_2.csv
+    reader = csv.reader(csvfile, delimiter= ',')    #Donde le estamos indicando que tipo de archivo es y como esta delimitado 
+    for x, fila in enumerate(reader):
+        for y, columna in enumerate(fila):
+            world_data[x][y] = int(columna)
+'''
+
 world = Mundo()
-world.process_data(world_data, tile_list, item_images, animaciones_enemigos)
+world.process_data(world_data_fondo, world_data_principal, tile_list, item_images, animaciones_enemigos)
 
 
 #creamos una funcion que dibuje un grid en la pantalla 
@@ -170,7 +194,7 @@ def dibujar_grid():
 
 
 #Crear un jugador de la clase personaje
-jugador = Personaje(800,2200, animaciones, 50, 1) #Creamos una varable usando la clase que importamos del personaje, dandole las coordenadas x y y dentro del argumento
+jugador = Personaje(constantes.COORDENADAS[str(nivel)][0], constantes.COORDENADAS[str(nivel)][1], animaciones, 50, 1) #Creamos una varable usando la clase que importamos del personaje, dandole las coordenadas x y y dentro del argumento
 
 """""
 De esta forma estamos creando los enemigos de forma manual pero lo haremos automatico relacionando tiles en el mapa 
@@ -324,6 +348,7 @@ while run == True:
     if nivel_completado == True:
         if nivel < constantes.NIVEL_MAXIMO:
             nivel += 1
+            '''
             world_data = resetear_mundo()
             #Cargar el archivo con el nuevo nivel 
             with open(f"niveles/nivel_{nivel}.csv", newline= '') as csvfile:  #Usamos el f string f"" para identificar el nombre del siguiente nivel que seria la variable nivel 
@@ -331,9 +356,13 @@ while run == True:
                 for x, fila in enumerate(reader):
                     for y, columna in enumerate(fila):
                         world_data[x][y] = int(columna)
+	        '''
+
+            world_data_fondo = cargar_csv(f"niveles/nivel_{nivel}_fondo.csv")
+            world_data_principal = cargar_csv(f"niveles/nivel_{nivel}_principal.csv")
 
             world = Mundo()
-            world.process_data(world_data, tile_list, item_images, animaciones_enemigos)
+            world.process_data(world_data_fondo, world_data_principal, tile_list, item_images, animaciones_enemigos)
             jugador.actualizar_coordenadas(constantes.COORDENADAS[str(nivel)])  #Le estaremos entregando las coordenadas de la tupla, que se entra x y y dentor de parentesis 
 
             #Crear lista de enemigos 
@@ -390,15 +419,13 @@ while run == True:
                         jugador.score = 0
                         nivel = 1
                         world_data = resetear_mundo()
-                        #Cargar de nuevo el archivo del nivel 
-                        with open(f"niveles/prueba_{nivel}.csv", newline= '') as csvfile:  
-                            reader = csv.reader(csvfile, delimiter= ',')    
-                            for x, fila in enumerate(reader):
-                                for y, columna in enumerate(fila):
-                                    world_data[x][y] = int(columna)
+
+                        world_data_fondo = cargar_csv(f"niveles/nivel_{nivel}_fondo.csv")
+                        world_data_principal = cargar_csv(f"niveles/nivel_{nivel}_principal.csv")
+
                         world = Mundo()
-                        world.process_data(world_data, tile_list, item_images, animaciones_enemigos)
-                        jugador.actualizar_coordenadas(constantes.COORDENADAS[str(nivel)])
+                        world.process_data(world_data_fondo, world_data_principal, tile_list, item_images, animaciones_enemigos)
+                        jugador.actualizar_coordenadas(constantes.COORDENADAS[str(nivel)])  #Le estaremos entregando las coordenadas de la tupla, que se entra x y y dentor de parentesis 
 
                         #Crear de nuevo la lista de enemigos 
                         lista_enemigos = []
@@ -408,7 +435,6 @@ while run == True:
                         #Añadir de nuevo los items desde la data del nivel 
                         for item in world.lista_item:
                             grupo_items.add(item)
-
 
     pygame.display.update()  #Es necesario ya que esto mantendr las actualizaciones que se hagan en el programa, mantener los cambios de la pantalla: dibujar objetos, actualizar imagenes etc. 
 
