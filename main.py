@@ -10,7 +10,7 @@ from mundo import Mundo #Importamos la clase mundo para usarla en el codigo
 import csv #Para trabajar con este tipo de archivos donde estamos importando los niveles 
 
 #FUNCIONES 
-#Escalar imagenes
+#Funcion para escalar imagenes
 def escalar_img(image, scale):  #Es una funcion que nos simplifica el tener que escalar las imagenes, para no tener que hacerlo repetidas veces
     w = image.get_width()
     h = image.get_height()
@@ -110,13 +110,12 @@ for i in range(num_coin_images):
 
 item_images = [coin_images, [posion_roja]]   #Se comporta como listas, y como la posicion roja es solo una imagen y no un conjunto de imagenes es importante transformarlo en lista o dara error 
 
-#Creamos una funcion que nos permita dibujar en pantalla texto
+#Funcion que nos permita dibujar en pantalla texto
 def dibujar_texto(texto, fuente, color, x, y):
     img = fuente.render(texto, True, color)
     ventana.blit(img, (x, y)) 
 
-
-#Definir
+#Funcion la cual dibuje los corazones en base a la vida del personaje
 def vida_jugador():
     c_mitad_dibujado = False 
     for i in range(5):   #Usamos el for i in range pero teniendo en cuenta que el ciclo empieza en 0 y no en 1 por tanto ponemos 4 imagenes, ya que tenemos 3 imagenes de corazones en este caso 
@@ -128,6 +127,7 @@ def vida_jugador():
         else:
             ventana.blit(corazon_vacio, (8+i*40, 8))
 
+#Funcion para resetear el mundo, vaciando los grupos del mundo, y creando una lista de tiles vacia
 def resetear_mundo():
     grupo_damage_text.empty()
     grupo_balas.empty()        
@@ -140,8 +140,7 @@ def resetear_mundo():
         data.append(filas) 
     return data 
 
-
-# Cargar los archivos CSV
+#Funcion para Cargar los archivos CSV
 def cargar_csv(archivo):
     data = []
     with open(archivo, newline='') as csvfile:
@@ -150,7 +149,7 @@ def cargar_csv(archivo):
             data.append([int(tile) for tile in row])
     return data
 
-# En el bucle principal o donde inicializas el nivel
+#Cargamos en una variable cada capa del mundo
 world_data_fondo = cargar_csv(f"niveles/nivel_{nivel}_fondo.csv")
 world_data_principal = cargar_csv(f"niveles/nivel_{nivel}_principal.csv")
 
@@ -181,16 +180,15 @@ with open("niveles/nivel_fondo_1.csv", newline= '') as csvfile:   #nivel_test_da
             world_data[x][y] = int(columna)
 '''
 
+#Creamos la variable de la clase Mundo, y llamamos su metodo que creamos para procesar la informacion relacionada al mundo 
 world = Mundo()
 world.process_data(world_data_fondo, world_data_principal, tile_list, item_images, animaciones_enemigos)
 
-
-#creamos una funcion que dibuje un grid en la pantalla 
+#Funcion que dibuje un grid en la pantalla / Meramente visual
 def dibujar_grid():
     for x in range(30):
         pygame.draw.line(ventana, constantes.BLANCO, (x*constantes.TILE_SIZE, 0), (x*constantes.TILE_SIZE, constantes.HEIGHT_WINDOW))
         pygame.draw.line(ventana, constantes.BLANCO, (0, x*constantes.TILE_SIZE), (constantes.WIDHT_WINDOW, x*constantes.TILE_SIZE)) 
-
 
 
 #Crear un jugador de la clase personaje
@@ -220,8 +218,8 @@ lista_enemigos.append(honguito)
 #Crear un arma de la clase weapon
 pistola = Weapon(imagen_pistola, imagen_balas)
 
-#Crear un grupo de sprites  
-grupo_damage_text = pygame.sprite.Group()   #Creamos grupos para poder tener varios sprites al mismo tiempo en la pantalla 
+#Crear un grupo de sprites para poder tener varios sprites al mismo tiempo en la pantalla
+grupo_damage_text = pygame.sprite.Group()   
 grupo_balas = pygame.sprite.Group()
 grupo_items = pygame.sprite.Group()
 #Añadir items desde la data del nivel 
@@ -282,7 +280,6 @@ while run == True:
         #Mover al jugador
         posicion_pantalla, nivel_completado = jugador.movimiento(delta_x, delta_y, world.obstaculos_tiles, world.exit_tile) #Llamando el mecanismo creado en el archivo del personaje para que se mueva 
         #print(posicion_pantalla) #Con este print vemos las coordenadas del jugador, para un control interno
-
 
         #Actualizar mapas
         world.update(posicion_pantalla)
@@ -348,7 +345,8 @@ while run == True:
     if nivel_completado == True:
         if nivel < constantes.NIVEL_MAXIMO:
             nivel += 1
-            '''
+
+            ''' Forma en la que se cargaba el nivel de nuevo, antes de crear la funcion que lo simplifica 
             world_data = resetear_mundo()
             #Cargar el archivo con el nuevo nivel 
             with open(f"niveles/nivel_{nivel}.csv", newline= '') as csvfile:  #Usamos el f string f"" para identificar el nombre del siguiente nivel que seria la variable nivel 
@@ -411,30 +409,30 @@ while run == True:
                 mover_arriba = False
             if event.key == pygame.K_s:
                 mover_abajo = False
-
+        #Con este comprobamos en que momento se presiona el boton de reinicio 
         if event.type == pygame.MOUSEBUTTONDOWN:
-                    if boton_reinicio.collidepoint(event.pos) and not jugador.vivo:
-                        jugador.vivo = True
-                        jugador.energia = 100 
-                        jugador.score = 0
-                        nivel = 1
-                        world_data = resetear_mundo()
+            if boton_reinicio.collidepoint(event.pos) and not jugador.vivo:
+                jugador.vivo = True
+                jugador.energia = 100 
+                jugador.score = 0
+                nivel = 1
+                world_data = resetear_mundo()
 
-                        world_data_fondo = cargar_csv(f"niveles/nivel_{nivel}_fondo.csv")
-                        world_data_principal = cargar_csv(f"niveles/nivel_{nivel}_principal.csv")
+                world_data_fondo = cargar_csv(f"niveles/nivel_{nivel}_fondo.csv")
+                world_data_principal = cargar_csv(f"niveles/nivel_{nivel}_principal.csv")
 
-                        world = Mundo()
-                        world.process_data(world_data_fondo, world_data_principal, tile_list, item_images, animaciones_enemigos)
-                        jugador.actualizar_coordenadas(constantes.COORDENADAS[str(nivel)])  #Le estaremos entregando las coordenadas de la tupla, que se entra x y y dentor de parentesis 
+                world = Mundo()
+                world.process_data(world_data_fondo, world_data_principal, tile_list, item_images, animaciones_enemigos)
+                jugador.actualizar_coordenadas(constantes.COORDENADAS[str(nivel)])  #Le estaremos entregando las coordenadas de la tupla, que se entra x y y dentor de parentesis 
 
-                        #Crear de nuevo la lista de enemigos 
-                        lista_enemigos = []
-                        for ene in world.lista_enemigo:   #Con este for estamos iterando entre la lista de los enemigos de la clase mundo donde estamos guardando todos nuestros enemigos para luego dibujarolos  
-                            lista_enemigos.append(ene)
+                #Crear de nuevo la lista de enemigos 
+                lista_enemigos = []
+                for ene in world.lista_enemigo:   #Con este for estamos iterando entre la lista de los enemigos de la clase mundo donde estamos guardando todos nuestros enemigos para luego dibujarolos  
+                    lista_enemigos.append(ene)
 
-                        #Añadir de nuevo los items desde la data del nivel 
-                        for item in world.lista_item:
-                            grupo_items.add(item)
+                #Añadir de nuevo los items desde la data del nivel 
+                for item in world.lista_item:
+                    grupo_items.add(item)
 
     pygame.display.update()  #Es necesario ya que esto mantendr las actualizaciones que se hagan en el programa, mantener los cambios de la pantalla: dibujar objetos, actualizar imagenes etc. 
 
