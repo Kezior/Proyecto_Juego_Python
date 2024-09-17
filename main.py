@@ -4,9 +4,9 @@ import constantes
 from personaje import Personaje
 from weapons import Weapon
 import os        #Esta libreria se us apara manejar archivos y carpetas 
-from items import Item
-from textos import DamageText
-from mundo import Mundo
+from items import Item  #Importamos la clase item para usarla en el codigo, Pero como se ve no esta en uso ya que se usaba cuando se creaban los items de forma manual
+from textos import DamageText #Importamos la clase damage text para usarla en el codigo
+from mundo import Mundo #Importamos la clase mundo para usarla en el codigo
 import csv #Para trabajar con este tipo de archivos donde estamos importando los niveles 
 
 #FUNCIONES 
@@ -155,7 +155,7 @@ world_data_fondo = cargar_csv(f"niveles/nivel_{nivel}_fondo.csv")
 world_data_principal = cargar_csv(f"niveles/nivel_{nivel}_principal.csv")
 
 
-'''
+''' FORMA MENOS EFICIENTE DE CARGAR LOS ARCHIVOS CSV
 #Creamoss un world data que nos servira para crear nuestro escenario del juego 
 world_data = []
 
