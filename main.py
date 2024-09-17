@@ -1,4 +1,4 @@
-# Fear And Dungeuns
+# Horror And Dungeuns
 import pygame 
 import constantes
 from personaje import Personaje
