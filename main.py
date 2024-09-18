@@ -256,38 +256,7 @@ game_over_image = pygame.transform.scale(game_over_image, (constantes.WIDHT_WIND
 
 # Definir el rectángulo para el botón de reinicio
 boton_reinicio = pygame.Rect(constantes.WIDHT_WINDOW / 2 - 100, constantes.HEIGHT_WINDOW / 2 + 280, 200, 50)
-def reiniciar_juego():
-    global jugador, nivel, world, lista_enemigos, grupo_items, grupo_balas, grupo_damage_text
-    
-    # Reiniciar jugador
-    jugador.vivo = True
-    jugador.energia = 100 
-    jugador.score = 0
-    jugador.actualizar_coordenadas(constantes.COORDENADAS["1"])  # Posición inicial del nivel 1
-    
-    # Reiniciar nivel
-    nivel = 1
-    
-    # Reiniciar mundo
-    world_data_fondo = cargar_csv(f"niveles/nivel_{nivel}_fondo.csv")
-    world_data_principal = cargar_csv(f"niveles/nivel_{nivel}_principal.csv")
-    world = Mundo()
-    world.process_data(world_data_fondo, world_data_principal, tile_list, item_images, animaciones_enemigos)
-    
-    # Reiniciar enemigos
-    lista_enemigos = []
-    for ene in world.lista_enemigo:
-        lista_enemigos.append(ene)
-    
-    # Reiniciar items
-    grupo_items.empty()
-    for item in world.lista_item:
-        grupo_items.add(item)
-    
-    # Limpiar balas y textos de daño
-    grupo_balas.empty()
-    grupo_damage_text.empty()
-    
+
 run = True  #Creamos el bucle general del juego
 while run == True:
 
@@ -418,15 +387,6 @@ while run == True:
     for event in pygame.event.get(): #Con el "event.get" de la libreria estariamos obteniendo que fue lo que se hizo: click una tecla etc.
         if event.type == pygame.QUIT:   #Esto estaria evaluando en que momento sucede un evento del tipo salir, por ejemplo la x de la ventana o el alt f4
             run = False
-            
-        if event.type == pygame.MOUSEBUTTONDOWN:
-            if not jugador.vivo and boton_reinicio.collidepoint(event.pos):
-                reiniciar_juego()
-                # Lógica para reiniciar el juego
-                jugador.vivo = True
-                jugador.energia = 100 
-                jugador.score = 0
-                nivel = 1
 
         #Evaluar  cuando estamos presionando determinada tecla
         if event.type == pygame.KEYDOWN:
@@ -476,7 +436,15 @@ while run == True:
                 #Añadir de nuevo los items desde la data del nivel 
                 for item in world.lista_item:
                     grupo_items.add(item)
-
+            
+        if event.type == pygame.MOUSEBUTTONDOWN:
+            if not jugador.vivo and boton_reinicio.collidepoint(event.pos):
+                # Lógica para reiniciar el juego
+                jugador.vivo = True
+                jugador.energia = 100 
+                jugador.score = 0
+                nivel = 1
+                
     pygame.display.update()  #Es necesario ya que esto mantendr las actualizaciones que se hagan en el programa, mantener los cambios de la pantalla: dibujar objetos, actualizar imagenes etc. 
 
 pygame.quit()
