@@ -249,14 +249,46 @@ reloj = pygame.time.Clock()
 #Boton de reinicio
 boton_reinicio = pygame.Rect(constantes.WIDHT_WINDOW / 2 - 100, constantes.HEIGHT_WINDOW / 2 + 100, 200, 50)
 
-run = True  #Creamos el bucle general del juego
+
 
 game_over_image = pygame.image.load("assets/images/game_over.png").convert_alpha()
 game_over_image = pygame.transform.scale(game_over_image, (constantes.WIDHT_WINDOW, constantes.HEIGHT_WINDOW))
 
 # Definir el rectángulo para el botón de reinicio
-boton_reinicio = pygame.Rect(constantes.WIDHT_WINDOW / 2 - 100, constantes.HEIGHT_WINDOW / 2 + 100, 200, 50)
-
+boton_reinicio = pygame.Rect(constantes.WIDHT_WINDOW / 2 - 100, constantes.HEIGHT_WINDOW / 2 + 280, 200, 50)
+def reiniciar_juego():
+    global jugador, nivel, world, lista_enemigos, grupo_items, grupo_balas, grupo_damage_text
+    
+    # Reiniciar jugador
+    jugador.vivo = True
+    jugador.energia = 100 
+    jugador.score = 0
+    jugador.actualizar_coordenadas(constantes.COORDENADAS["1"])  # Posición inicial del nivel 1
+    
+    # Reiniciar nivel
+    nivel = 1
+    
+    # Reiniciar mundo
+    world_data_fondo = cargar_csv(f"niveles/nivel_{nivel}_fondo.csv")
+    world_data_principal = cargar_csv(f"niveles/nivel_{nivel}_principal.csv")
+    world = Mundo()
+    world.process_data(world_data_fondo, world_data_principal, tile_list, item_images, animaciones_enemigos)
+    
+    # Reiniciar enemigos
+    lista_enemigos = []
+    for ene in world.lista_enemigo:
+        lista_enemigos.append(ene)
+    
+    # Reiniciar items
+    grupo_items.empty()
+    for item in world.lista_item:
+        grupo_items.add(item)
+    
+    # Limpiar balas y textos de daño
+    grupo_balas.empty()
+    grupo_damage_text.empty()
+    
+run = True  #Creamos el bucle general del juego
 while run == True:
 
     #Como ponemos que vaya a esos 60 FPS
@@ -382,12 +414,19 @@ while run == True:
     # Modificar la sección de game over en el bucle principal
     if jugador.vivo == False:
         ventana.blit(game_over_image, (0, 0))
-        pygame.draw.rect(ventana, constantes.AMARILLO, boton_reinicio)
-        ventana.blit(texto_boton_reinicio, (boton_reinicio.x + 40, boton_reinicio.y + 10))
 
     for event in pygame.event.get(): #Con el "event.get" de la libreria estariamos obteniendo que fue lo que se hizo: click una tecla etc.
         if event.type == pygame.QUIT:   #Esto estaria evaluando en que momento sucede un evento del tipo salir, por ejemplo la x de la ventana o el alt f4
             run = False
+            
+        if event.type == pygame.MOUSEBUTTONDOWN:
+            if not jugador.vivo and boton_reinicio.collidepoint(event.pos):
+                reiniciar_juego()
+                # Lógica para reiniciar el juego
+                jugador.vivo = True
+                jugador.energia = 100 
+                jugador.score = 0
+                nivel = 1
 
         #Evaluar  cuando estamos presionando determinada tecla
         if event.type == pygame.KEYDOWN:
@@ -402,7 +441,7 @@ while run == True:
             if event.key == pygame.K_e:
                 if world.cambiar_puerta(jugador, tile_list):   #Le entregamos a la funcion el jugador ya que evaluamos que tan cerca esta para abirir la puerta y el tile_list para saber que tiles hay
                     print("Puerta Cambiada")
-                    
+
         #Para cuando se suelte la tecla que se esta presionando
         if event.type == pygame.KEYUP: 
             if event.key == pygame.K_a:
