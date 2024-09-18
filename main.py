@@ -9,6 +9,11 @@ from textos import DamageText #Importamos la clase damage text para usarla en el
 from mundo import Mundo #Importamos la clase mundo para usarla en el codigo
 import csv #Para trabajar con este tipo de archivos donde estamos importando los niveles 
 
+#Aca estamos iniciando la libreria pygame
+pygame.init() 
+ventana = pygame.display.set_mode((constantes.WIDHT_WINDOW, constantes.HEIGHT_WINDOW))
+pygame.display.set_caption("Horror And Dungeuns") #Se usa para cambiar el nombre de la ventana 
+
 #FUNCIONES 
 #Funcion para escalar imagenes
 def escalar_img(image, scale):  #Es una funcion que nos simplifica el tener que escalar las imagenes, para no tener que hacerlo repetidas veces
@@ -25,25 +30,97 @@ def contar_elementos(directorio):
 def nombres_carpetas(directorio):
     return os.listdir(directorio)
 
-#Aca estamos iniciando la libreria pygame
-pygame.init() 
-ventana = pygame.display.set_mode((constantes.WIDHT_WINDOW, constantes.HEIGHT_WINDOW))
-pygame.display.set_caption("La Mazmorra") #Se usa para cambiar el nombre de la ventana 
+#Funcion que dibuje un grid en la pantalla / Meramente visual
+def dibujar_grid():
+    for x in range(30):
+        pygame.draw.line(ventana, constantes.BLANCO, (x*constantes.TILE_SIZE, 0), (x*constantes.TILE_SIZE, constantes.HEIGHT_WINDOW))
+        pygame.draw.line(ventana, constantes.BLANCO, (0, x*constantes.TILE_SIZE), (constantes.WIDHT_WINDOW, x*constantes.TILE_SIZE)) 
 
-#Variables 
-posicion_pantalla = [0, 0] #Esta sera la que usaremos para las camaras, le damos los valores de 0, 0 que serian eje x y eje y
-nivel = 1   #Que usaremos para diferentes partes del codigo e identificar que nivel estamos usando
+#Funcion que nos permita dibujar en pantalla texto
+def dibujar_texto(texto, fuente, color, x, y):
+    img = fuente.render(texto, True, color)
+    ventana.blit(img, (x, y))
+
+#Funcion la cual dibuje los corazones en base a la vida del personaje
+def vida_jugador():
+    c_mitad_dibujado = False 
+    for i in range(5):   #Usamos el for i in range pero teniendo en cuenta que el ciclo empieza en 0 y no en 1 por tanto ponemos 4 imagenes, ya que tenemos 3 imagenes de corazones en este caso 
+        if jugador.energia >= ((i+1)*20):
+            ventana.blit(corazon_lleno, (8+i*40, 8))
+        elif jugador.energia % 20 > 0 and c_mitad_dibujado == False:
+            ventana.blit(corazon_medio, (8+i*40, 8))
+            c_mitad_dibujado = True
+        else:
+            ventana.blit(corazon_vacio, (8+i*40, 8))
+
+#Funcion para resetear el mundo, vaciando los grupos del mundo, y creando una lista de tiles vacia
+def resetear_mundo():
+    grupo_damage_text.empty()
+    grupo_balas.empty()        
+    grupo_items.empty()
+
+    #crear lista de tile vacias
+    data =[]
+    for fila in range (constantes.FILAS):
+        filas =[2] * constantes.COLUMNAS
+        data.append(filas) 
+    return data 
+
+#Funcion para Cargar los archivos CSV
+def cargar_csv(archivo):
+    data = []
+    with open(archivo, newline='') as csvfile:
+        reader = csv.reader(csvfile, delimiter=',')
+        for row in reader:
+            data.append([int(tile) for tile in row])
+    return data
+
+''' FORMA MENOS EFICIENTE DE CARGAR LOS ARCHIVOS CSV
+#Creamoss un world data que nos servira para crear nuestro escenario del juego 
+world_data = []
+
+#El siguiente for es para que cuando no se entregue nada, dibujo en pantalla un tile en especifico 
+for fila in range(constantes.FILAS):
+    filas = [23] * constantes.COLUMNAS
+    world_data.append(filas)
+
+#print(filas)
+
+#Cargar el archivo con el nivel - Principal
+with open("niveles/nivel_principal_1.csv", newline= '') as csvfile:   #nivel_test_dangeun.csv      nivel_text.csv    nivel_catacombs_2.csv
+    reader = csv.reader(csvfile, delimiter= ',')    #Donde le estamos indicando que tipo de archivo es y como esta delimitado 
+    for x, fila in enumerate(reader):
+        for y, columna in enumerate(fila):
+            world_data[x][y] = int(columna)
+
+#Cargar el archivo con el nivel - Fondo 
+with open("niveles/nivel_fondo_1.csv", newline= '') as csvfile:   #nivel_test_dangeun.csv      nivel_text.csv    nivel_catacombs_2.csv
+    reader = csv.reader(csvfile, delimiter= ',')    #Donde le estamos indicando que tipo de archivo es y como esta delimitado 
+    for x, fila in enumerate(reader):
+        for y, columna in enumerate(fila):
+            world_data[x][y] = int(columna)
+'''
+
+#VARIABLES 
+#Variable para las camaras, le damos los valores de 0, 0 que serian eje x y eje y
+posicion_pantalla = [0, 0] 
+#Variable que almacena el nivel actual
+nivel = 1
+#Variable que almacena la imagen del fondo   
 background_nivel_1 = pygame.image.load(constantes.BACKGROUND).convert_alpha()
+# Definir el rectángulo para el botón de reinicio
+boton_reinicio = pygame.Rect(constantes.WIDHT_WINDOW / 2 - 100, constantes.HEIGHT_WINDOW / 2 + 280, 200, 50)
 
 #Fuentes que usaremos en el juego 
 font = pygame.font.Font("assets/fonts/Kaph-Regular.ttf", 30)
 font_game_over = pygame.font.Font("assets/fonts/Kaph-Regular.ttf", 70) #CReamos una fuente especifica para la pantalla de game over, en realidad usamos la misma pero se le cambio el tamaño
 font_reinicio = pygame.font.Font("assets/fonts/Kaph-Regular.ttf", 20)
 
+#Fuente para el texto de game over y el texto del boton "Reinicio" si se quiere usar / se esta omitiendo ya que se creo una imagen con el game over, en el que solo se dibuja el boton de reinicio pero invisible sin relleno
 game_over_text = font_game_over.render("Game Over", True, constantes.BLANCO)
 texto_boton_reinicio = font_reinicio.render("Reiniciar", True, constantes.NEGRO)
 
-#Aca estamos importando las imagenes
+#ACA ESTAMOS IMPORTANDO LAS IMAGENES
 #Vida 
 corazon_vacio = pygame.image.load("assets\images\items\heart_animated_3.png").convert_alpha()
 corazon_vacio = escalar_img(corazon_vacio, constantes.SCALE_CORAZON)
@@ -107,89 +184,21 @@ for i in range(num_coin_images):
     img = pygame.image.load(f"assets\images\items\coin\coin_{i+1}.png") #Importante usar el f para poner variables dentro del texto 
     img = escalar_img(img, constantes.SCALE_MONEDA)
     coin_images.append(img) 
-
+#Creamos una lista que guarde las animaciones/imagenes de los items para luego llamarlos en las clases
 item_images = [coin_images, [posion_roja]]   #Se comporta como listas, y como la posicion roja es solo una imagen y no un conjunto de imagenes es importante transformarlo en lista o dara error 
 
-#Funcion que nos permita dibujar en pantalla texto
-def dibujar_texto(texto, fuente, color, x, y):
-    img = fuente.render(texto, True, color)
-    ventana.blit(img, (x, y)) 
+#Cargar la imagen del Game Over
+game_over_image = pygame.image.load("assets/images/game_over.png").convert_alpha()
+game_over_image = pygame.transform.scale(game_over_image, (constantes.WIDHT_WINDOW, constantes.HEIGHT_WINDOW))
 
-#Funcion la cual dibuje los corazones en base a la vida del personaje
-def vida_jugador():
-    c_mitad_dibujado = False 
-    for i in range(5):   #Usamos el for i in range pero teniendo en cuenta que el ciclo empieza en 0 y no en 1 por tanto ponemos 4 imagenes, ya que tenemos 3 imagenes de corazones en este caso 
-        if jugador.energia >= ((i+1)*20):
-            ventana.blit(corazon_lleno, (8+i*40, 8))
-        elif jugador.energia % 20 > 0 and c_mitad_dibujado == False:
-            ventana.blit(corazon_medio, (8+i*40, 8))
-            c_mitad_dibujado = True
-        else:
-            ventana.blit(corazon_vacio, (8+i*40, 8))
 
-#Funcion para resetear el mundo, vaciando los grupos del mundo, y creando una lista de tiles vacia
-def resetear_mundo():
-    grupo_damage_text.empty()
-    grupo_balas.empty()        
-    grupo_items.empty()
-
-    #crear lista de tile vacias
-    data =[]
-    for fila in range (constantes.FILAS):
-        filas =[2] * constantes.COLUMNAS
-        data.append(filas) 
-    return data 
-
-#Funcion para Cargar los archivos CSV
-def cargar_csv(archivo):
-    data = []
-    with open(archivo, newline='') as csvfile:
-        reader = csv.reader(csvfile, delimiter=',')
-        for row in reader:
-            data.append([int(tile) for tile in row])
-    return data
-
-#Cargamos en una variable cada capa del mundo
+#Cargamos en una variable cada capa del mundo / Usando la funcion que se encargar de cargar el csv del mapa
 world_data_fondo = cargar_csv(f"niveles/nivel_{nivel}_fondo.csv")
 world_data_principal = cargar_csv(f"niveles/nivel_{nivel}_principal.csv")
-
-
-''' FORMA MENOS EFICIENTE DE CARGAR LOS ARCHIVOS CSV
-#Creamoss un world data que nos servira para crear nuestro escenario del juego 
-world_data = []
-
-#El siguiente for es para que cuando no se entregue nada, dibujo en pantalla un tile en especifico 
-for fila in range(constantes.FILAS):
-    filas = [23] * constantes.COLUMNAS
-    world_data.append(filas)
-
-#print(filas)
-
-#Cargar el archivo con el nivel - Principal
-with open("niveles/nivel_principal_1.csv", newline= '') as csvfile:   #nivel_test_dangeun.csv      nivel_text.csv    nivel_catacombs_2.csv
-    reader = csv.reader(csvfile, delimiter= ',')    #Donde le estamos indicando que tipo de archivo es y como esta delimitado 
-    for x, fila in enumerate(reader):
-        for y, columna in enumerate(fila):
-            world_data[x][y] = int(columna)
-
-#Cargar el archivo con el nivel - Fondo 
-with open("niveles/nivel_fondo_1.csv", newline= '') as csvfile:   #nivel_test_dangeun.csv      nivel_text.csv    nivel_catacombs_2.csv
-    reader = csv.reader(csvfile, delimiter= ',')    #Donde le estamos indicando que tipo de archivo es y como esta delimitado 
-    for x, fila in enumerate(reader):
-        for y, columna in enumerate(fila):
-            world_data[x][y] = int(columna)
-'''
 
 #Creamos la variable de la clase Mundo, y llamamos su metodo que creamos para procesar la informacion relacionada al mundo 
 world = Mundo()
 world.process_data(world_data_fondo, world_data_principal, tile_list, item_images, animaciones_enemigos)
-
-#Funcion que dibuje un grid en la pantalla / Meramente visual
-def dibujar_grid():
-    for x in range(30):
-        pygame.draw.line(ventana, constantes.BLANCO, (x*constantes.TILE_SIZE, 0), (x*constantes.TILE_SIZE, constantes.HEIGHT_WINDOW))
-        pygame.draw.line(ventana, constantes.BLANCO, (0, x*constantes.TILE_SIZE), (constantes.WIDHT_WINDOW, x*constantes.TILE_SIZE)) 
-
 
 #Crear un jugador de la clase personaje
 jugador = Personaje(constantes.COORDENADAS[str(nivel)][0], constantes.COORDENADAS[str(nivel)][1], animaciones, 50, 1) #Creamos una varable usando la clase que importamos del personaje, dandole las coordenadas x y y dentro del argumento
@@ -246,18 +255,8 @@ mover_derecha = False
 #Controlar el framerate para controlar el movimiento del personaje
 reloj = pygame.time.Clock()
 
-#Boton de reinicio
-boton_reinicio = pygame.Rect(constantes.WIDHT_WINDOW / 2 - 100, constantes.HEIGHT_WINDOW / 2 + 100, 200, 50)
-
-
-
-game_over_image = pygame.image.load("assets/images/game_over.png").convert_alpha()
-game_over_image = pygame.transform.scale(game_over_image, (constantes.WIDHT_WINDOW, constantes.HEIGHT_WINDOW))
-
-# Definir el rectángulo para el botón de reinicio
-boton_reinicio = pygame.Rect(constantes.WIDHT_WINDOW / 2 - 100, constantes.HEIGHT_WINDOW / 2 + 280, 200, 50)
-
-run = True  #Creamos el bucle general del juego
+#Creamos el bucle general del juego
+run = True  
 while run == True:
 
     #Como ponemos que vaya a esos 60 FPS
@@ -412,6 +411,7 @@ while run == True:
                 mover_arriba = False
             if event.key == pygame.K_s:
                 mover_abajo = False
+
         #Con este comprobamos en que momento se presiona el boton de reinicio 
         if event.type == pygame.MOUSEBUTTONDOWN:
             if boton_reinicio.collidepoint(event.pos) and not jugador.vivo:
@@ -436,15 +436,7 @@ while run == True:
                 #Añadir de nuevo los items desde la data del nivel 
                 for item in world.lista_item:
                     grupo_items.add(item)
-            
-        if event.type == pygame.MOUSEBUTTONDOWN:
-            if not jugador.vivo and boton_reinicio.collidepoint(event.pos):
-                # Lógica para reiniciar el juego
-                jugador.vivo = True
-                jugador.energia = 100 
-                jugador.score = 0
-                nivel = 1
-                
+
     pygame.display.update()  #Es necesario ya que esto mantendr las actualizaciones que se hagan en el programa, mantener los cambios de la pantalla: dibujar objetos, actualizar imagenes etc. 
 
 pygame.quit()
