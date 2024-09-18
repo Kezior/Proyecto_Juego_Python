@@ -250,6 +250,13 @@ reloj = pygame.time.Clock()
 boton_reinicio = pygame.Rect(constantes.WIDHT_WINDOW / 2 - 100, constantes.HEIGHT_WINDOW / 2 + 100, 200, 50)
 
 run = True  #Creamos el bucle general del juego
+
+game_over_image = pygame.image.load("assets/images/game_over.png").convert_alpha()
+game_over_image = pygame.transform.scale(game_over_image, (constantes.WIDHT_WINDOW, constantes.HEIGHT_WINDOW))
+
+# Definir el rectángulo para el botón de reinicio
+boton_reinicio = pygame.Rect(constantes.WIDHT_WINDOW / 2 - 100, constantes.HEIGHT_WINDOW / 2 + 100, 200, 50)
+
 while run == True:
 
     #Como ponemos que vaya a esos 60 FPS
@@ -372,12 +379,9 @@ while run == True:
             for item in world.lista_item:
                 grupo_items.add(item)
 
-    #Crear ventana de game over
+    # Modificar la sección de game over en el bucle principal
     if jugador.vivo == False:
-        ventana.fill(constantes.ROJO_OSCURO)
-        text_rect = game_over_text.get_rect(center=(constantes.WIDHT_WINDOW / 2, constantes.HEIGHT_WINDOW / 2))    
-
-        ventana.blit(game_over_text, text_rect)
+        ventana.blit(game_over_image, (0, 0))
         pygame.draw.rect(ventana, constantes.AMARILLO, boton_reinicio)
         ventana.blit(texto_boton_reinicio, (boton_reinicio.x + 40, boton_reinicio.y + 10))
 
