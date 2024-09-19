@@ -11,6 +11,7 @@ import csv #Para trabajar con este tipo de archivos donde estamos importando los
 
 #Aca estamos iniciando la libreria pygame
 pygame.init() 
+pygame.mixer.init()
 ventana = pygame.display.set_mode((constantes.WIDHT_WINDOW, constantes.HEIGHT_WINDOW))
 pygame.display.set_caption("Horror And Dungeuns") #Se usa para cambiar el nombre de la ventana 
 
@@ -106,10 +107,17 @@ with open("niveles/nivel_fondo_1.csv", newline= '') as csvfile:   #nivel_test_da
 posicion_pantalla = [0, 0] 
 #Variable que almacena el nivel actual
 nivel = 1
-#Variable que almacena la imagen del fondo   
-background_nivel_1 = pygame.image.load(constantes.BACKGROUND).convert_alpha()
+#Variable que almacena la imagen del fondo para el menu de inicio  
+background_menu_inicio = pygame.image.load(constantes.BACKGROUND_MENU_INICIO).convert_alpha()
 # Definir el rectángulo para el botón de reinicio
 boton_reinicio = pygame.Rect(constantes.WIDHT_WINDOW / 2 - 100, constantes.HEIGHT_WINDOW / 2 + 280, 200, 50)
+
+#BOTONES DE INICIO
+#Definir el rectángulo para el botón de iniciar el juego
+boton_iniciar = pygame.Rect(constantes.WIDHT_WINDOW / 2 - 100, constantes.HEIGHT_WINDOW / 2 + 200, 200, 50)
+#Definir el rectangulo para el boton salir del juego 
+boton_salir = pygame.Rect(constantes.WIDHT_WINDOW / 2 - 100, constantes.HEIGHT_WINDOW / 2 + 360, 200, 50)
+
 
 #Fuentes que usaremos en el juego 
 font = pygame.font.Font("assets/fonts/Kaph-Regular.ttf", 30)
@@ -188,7 +196,7 @@ for i in range(num_coin_images):
 item_images = [coin_images, [posion_roja]]   #Se comporta como listas, y como la posicion roja es solo una imagen y no un conjunto de imagenes es importante transformarlo en lista o dara error 
 
 #Cargar la imagen del Game Over
-game_over_image = pygame.image.load("assets/images/game_over.png").convert_alpha()
+game_over_image = pygame.image.load(constantes.BACKGROUND_GAME_OVER).convert_alpha()
 game_over_image = pygame.transform.scale(game_over_image, (constantes.WIDHT_WINDOW, constantes.HEIGHT_WINDOW))
 
 
@@ -255,171 +263,141 @@ mover_derecha = False
 #Controlar el framerate para controlar el movimiento del personaje
 reloj = pygame.time.Clock()
 
+#Cargar la musica
+pygame.mixer.init()
+pygame.mixer.music.load("assets/sounds/music.mp3")
+pygame.mixer.music.play(-1)
+
+sonido_disapro = pygame.mixer.Sound("assets/sounds/disaprove.mp3")
+
+#Mostrar el menu de inicio
+mostrar_menu = True
+
 #Creamos el bucle general del juego
 run = True  
 while run == True:
+    if mostrar_menu: #Es lo mismo que decir if mostrar_menu == True:
+        ventana.blit(background_menu_inicio, (0, 0))
+        #Dibujamos el rectangulo para saber donde esta el boton de iniciar y el de salir 
+        pygame.draw.rect(ventana, constantes.BLANCO, boton_iniciar, 2, 15) #El 2 es el grosor y el 15 es el radio de las esquinas 
+        pygame.draw.rect(ventana, constantes.BLANCO, boton_salir, 2, 15) 
+        pygame.display.update()        
 
-    #Como ponemos que vaya a esos 60 FPS
-    reloj.tick(constantes.FPS)
+        for event in pygame.event.get(): #Se usa para cerrar la ventana 
+            if event.type == pygame.QUIT:
+                run = False
+            if event.type == pygame.MOUSEBUTTONDOWN:
+                if boton_iniciar.collidepoint(event.pos):
+                    mostrar_menu = False
+                if boton_salir.collidepoint(event.pos):
+                    run = False
+    else:
+        #Como ponemos que vaya a esos 60 FPS
+        reloj.tick(constantes.FPS)
 
-    #Controlar el framerate para controlar el movimiento del personaje
-    reloj = pygame.time.Clock()
-    #ventana.fill(constantes.BLANCO)    #Con el "fill" llenamos la pantalla del color definido
-    ventana.blit((background_nivel_1), [0, 0])   #Con el "blit" ponemos una imagen de fondo 
+        #Controlar el framerate para controlar el movimiento del personaje
+        reloj = pygame.time.Clock()
+        #Le damos un fondo a la ventana para que no haya problemas con la actualizacion de la pantalla 
+        ventana.fill(constantes.COLOR_FONDO)    #Con el "fill" llenamos la pantalla del color definido
+        #ventana.blit((background_nivel_1), [0, 0])   #Con el "blit" ponemos una imagen de fondo 
 
-    if jugador.vivo == True:
+        if jugador.vivo == True:
 
-        #dibujar_grid()
+            #dibujar_grid()
 
-        #Calcular el movimiento del jugador
-        delta_x = 0
-        delta_y = 0
+            #Calcular el movimiento del jugador
+            delta_x = 0
+            delta_y = 0
 
-        if mover_derecha == True:
-            delta_x = constantes.VELOCIDAD  #Se puso la velocidad como una constante para que sea mas sencillo en el caso de querer cambiarlo
-        if mover_izquierda == True:
-            delta_x = -constantes.VELOCIDAD
-        if mover_arriba == True:
-            delta_y = -constantes.VELOCIDAD
-        if mover_abajo == True:
-            delta_y = constantes.VELOCIDAD   
+            if mover_derecha == True:
+                delta_x = constantes.VELOCIDAD  #Se puso la velocidad como una constante para que sea mas sencillo en el caso de querer cambiarlo
+            if mover_izquierda == True:
+                delta_x = -constantes.VELOCIDAD
+            if mover_arriba == True:
+                delta_y = -constantes.VELOCIDAD
+            if mover_abajo == True:
+                delta_y = constantes.VELOCIDAD   
 
-        #Mover al jugador
-        posicion_pantalla, nivel_completado = jugador.movimiento(delta_x, delta_y, world.obstaculos_tiles, world.exit_tile) #Llamando el mecanismo creado en el archivo del personaje para que se mueva 
-        #print(posicion_pantalla) #Con este print vemos las coordenadas del jugador, para un control interno
+            #Mover al jugador
+            posicion_pantalla, nivel_completado = jugador.movimiento(delta_x, delta_y, world.obstaculos_tiles, world.exit_tile) #Llamando el mecanismo creado en el archivo del personaje para que se mueva 
+            #print(posicion_pantalla) #Con este print vemos las coordenadas del jugador, para un control interno
 
-        #Actualizar mapas
-        world.update(posicion_pantalla)
+            #Actualizar mapas
+            world.update(posicion_pantalla)
 
-        #Actualiza el estado del jugador 
-        jugador.update()
+            #Actualiza el estado del jugador 
+            jugador.update()
 
-        #Actualiza el estado del enemigo 
+            #Actualiza el estado del enemigo 
+            for ene in lista_enemigos:
+                ene.update()
+                #print(ene.energia)    #Con esto visualizamos la vida de cada entidad en la terminal 
+
+            #Actualiza el estado del arma 
+            bala = pistola.update(jugador)
+            if bala:
+                grupo_balas.add(bala)
+                #Luego de agregar las balas al grupo, llamamos la variable con el sonido del disparo que hayamos puesto
+                sonido_disapro.play()
+            for bala in grupo_balas:
+                damage, pos_damage = bala.update(lista_enemigos, world.obstaculos_tiles)   #Le entregamos la lista de enemigos para que se generen las colisones de las balas con esa lista de enemigos 
+                if damage:   #Es lo mismo que decir: si damage es distinto de 0 
+                    damage_text = DamageText(pos_damage.centerx, pos_damage.centery, str(damage), font, constantes.ROJO)
+                    grupo_damage_text.add(damage_text)
+
+            #Actualizar daño
+            grupo_damage_text.update(posicion_pantalla)
+        
+            #Actualizar items 
+            grupo_items.update(posicion_pantalla, jugador)
+
+        #Dibujar al mundo 
+        world.draw(ventana)
+
+        #Dibujar al jugador
+        jugador.draw(ventana) #Llamamos el metodo "draw" que definimos para colocar donde lo queremos poner, al personaje creado
+
+        #Dibujar al enemigo 
         for ene in lista_enemigos:
-            ene.update()
-            #print(ene.energia)    #Con esto visualizamos la vida de cada entidad en la terminal 
+            if ene.energia == 0:   #Usamos la caracteristica "energia" de la clase personaje para identificar cuando este llega a 0 
+                lista_enemigos.remove(ene)    #Removemos dicho enemigo de la lista en la que se estan imprimiendo los enemigos
+            if ene.energia > 0:   #Dejamos esta condicion para que se dibujen en pantalla siempre y cuando su vida no sea 0
+                ene.enemigos(jugador, posicion_pantalla, world.obstaculos_tiles, world.exit_tile)
+                ene.draw(ventana)
 
-        #Actualiza el estado del arma 
-        bala = pistola.update(jugador)
-        if bala:
-            grupo_balas.add(bala)
+        #Dibujar el arma 
+        pistola.draw(ventana)
+
+        #Dibujar balas
         for bala in grupo_balas:
-            damage, pos_damage = bala.update(lista_enemigos, world.obstaculos_tiles)   #Le entregamos la lista de enemigos para que se generen las colisones de las balas con esa lista de enemigos 
-            if damage:   #Es lo mismo que decir: si damage es distinto de 0 
-                damage_text = DamageText(pos_damage.centerx, pos_damage.centery, str(damage), font, constantes.ROJO)
-                grupo_damage_text.add(damage_text)
+            bala.draw(ventana)  
 
-        #Actualizar daño
-        grupo_damage_text.update(posicion_pantalla)
-    
-        #Actualizar items 
-        grupo_items.update(posicion_pantalla, jugador)
+        #Dibujar los corazones 
+        vida_jugador()
+        dibujar_texto(f"Score: {jugador.score}", font, constantes.AMARILLO, 1700, 5)
 
-    #Dibujar al mundo 
-    world.draw(ventana)
+        #Dibujar textos
+        grupo_damage_text.draw(ventana)
+        #Como dibujar el texto para saber en que nivel vamos 
+        dibujar_texto(f"Nivel: " + str(nivel), font, constantes.BLANCO, constantes.WIDHT_WINDOW/2, 5)
 
-    #Dibujar al jugador
-    jugador.draw(ventana) #Llamamos el metodo "draw" que definimos para colocar donde lo queremos poner, al personaje creado
+        #Dibujar items en pantalla 
+        grupo_items.draw(ventana)
 
-    #Dibujar al enemigo 
-    for ene in lista_enemigos:
-        if ene.energia == 0:   #Usamos la caracteristica "energia" de la clase personaje para identificar cuando este llega a 0 
-            lista_enemigos.remove(ene)    #Removemos dicho enemigo de la lista en la que se estan imprimiendo los enemigos
-        if ene.energia > 0:   #Dejamos esta condicion para que se dibujen en pantalla siempre y cuando su vida no sea 0
-            ene.enemigos(jugador, posicion_pantalla, world.obstaculos_tiles, world.exit_tile)
-            ene.draw(ventana)
+        #Chequear si el nivel esta completado
+        if nivel_completado == True:
+            if nivel < constantes.NIVEL_MAXIMO:
+                nivel += 1
 
-    #Dibujar el arma 
-    pistola.draw(ventana)
-
-    #Dibujar balas
-    for bala in grupo_balas:
-        bala.draw(ventana)  
-
-    #Dibujar los corazones 
-    vida_jugador()
-    dibujar_texto(f"Score: {jugador.score}", font, constantes.AMARILLO, 1700, 5)
-
-    #Dibujar textos
-    grupo_damage_text.draw(ventana)
-    #Como dibujar el texto para saber en que nivel vamos 
-    dibujar_texto(f"Nivel: " + str(nivel), font, constantes.BLANCO, constantes.WIDHT_WINDOW/2, 5)
-
-    #Dibujar items en pantalla 
-    grupo_items.draw(ventana)
-
-    #Chequear si el nivel esta completado
-    if nivel_completado == True:
-        if nivel < constantes.NIVEL_MAXIMO:
-            nivel += 1
-
-            ''' Forma en la que se cargaba el nivel de nuevo, antes de crear la funcion que lo simplifica 
-            world_data = resetear_mundo()
-            #Cargar el archivo con el nuevo nivel 
-            with open(f"niveles/nivel_{nivel}.csv", newline= '') as csvfile:  #Usamos el f string f"" para identificar el nombre del siguiente nivel que seria la variable nivel 
-                reader = csv.reader(csvfile, delimiter= ',')    #Donde le estamos indicando que tipo de archivo es y como esta delimitado 
-                for x, fila in enumerate(reader):
-                    for y, columna in enumerate(fila):
-                        world_data[x][y] = int(columna)
-	        '''
-
-            world_data_fondo = cargar_csv(f"niveles/nivel_{nivel}_fondo.csv")
-            world_data_principal = cargar_csv(f"niveles/nivel_{nivel}_principal.csv")
-
-            world = Mundo()
-            world.process_data(world_data_fondo, world_data_principal, tile_list, item_images, animaciones_enemigos)
-            jugador.actualizar_coordenadas(constantes.COORDENADAS[str(nivel)])  #Le estaremos entregando las coordenadas de la tupla, que se entra x y y dentor de parentesis 
-
-            #Crear lista de enemigos 
-            lista_enemigos = []
-            for ene in world.lista_enemigo:   #Con este for estamos iterando entre la lista de los enemigos de la clase mundo donde estamos guardando todos nuestros enemigos para luego dibujarolos  
-                lista_enemigos.append(ene)
-
-            #Añadir items desde la data del nivel 
-            for item in world.lista_item:
-                grupo_items.add(item)
-
-    # Modificar la sección de game over en el bucle principal
-    if jugador.vivo == False:
-        ventana.blit(game_over_image, (0, 0))
-
-    for event in pygame.event.get(): #Con el "event.get" de la libreria estariamos obteniendo que fue lo que se hizo: click una tecla etc.
-        if event.type == pygame.QUIT:   #Esto estaria evaluando en que momento sucede un evento del tipo salir, por ejemplo la x de la ventana o el alt f4
-            run = False
-
-        #Evaluar  cuando estamos presionando determinada tecla
-        if event.type == pygame.KEYDOWN:
-            if event.key == pygame.K_a:
-                mover_izquierda = True
-            if event.key == pygame.K_d:
-                mover_derecha = True
-            if event.key == pygame.K_w:
-                mover_arriba = True
-            if event.key == pygame.K_s:
-                mover_abajo = True
-            if event.key == pygame.K_e:
-                if world.cambiar_puerta(jugador, tile_list):   #Le entregamos a la funcion el jugador ya que evaluamos que tan cerca esta para abirir la puerta y el tile_list para saber que tiles hay
-                    print("Puerta Cambiada")
-
-        #Para cuando se suelte la tecla que se esta presionando
-        if event.type == pygame.KEYUP: 
-            if event.key == pygame.K_a:
-              mover_izquierda = False
-            if event.key == pygame.K_d:
-                mover_derecha = False
-            if event.key == pygame.K_w:
-                mover_arriba = False
-            if event.key == pygame.K_s:
-                mover_abajo = False
-
-        #Con este comprobamos en que momento se presiona el boton de reinicio 
-        if event.type == pygame.MOUSEBUTTONDOWN:
-            if boton_reinicio.collidepoint(event.pos) and not jugador.vivo:
-                jugador.vivo = True
-                jugador.energia = 100 
-                jugador.score = 0
-                nivel = 1
+                ''' Forma en la que se cargaba el nivel de nuevo, antes de crear la funcion que lo simplifica 
                 world_data = resetear_mundo()
+                #Cargar el archivo con el nuevo nivel 
+                with open(f"niveles/nivel_{nivel}.csv", newline= '') as csvfile:  #Usamos el f string f"" para identificar el nombre del siguiente nivel que seria la variable nivel 
+                    reader = csv.reader(csvfile, delimiter= ',')    #Donde le estamos indicando que tipo de archivo es y como esta delimitado 
+                    for x, fila in enumerate(reader):
+                        for y, columna in enumerate(fila):
+                            world_data[x][y] = int(columna)
+                '''
 
                 world_data_fondo = cargar_csv(f"niveles/nivel_{nivel}_fondo.csv")
                 world_data_principal = cargar_csv(f"niveles/nivel_{nivel}_principal.csv")
@@ -428,15 +406,73 @@ while run == True:
                 world.process_data(world_data_fondo, world_data_principal, tile_list, item_images, animaciones_enemigos)
                 jugador.actualizar_coordenadas(constantes.COORDENADAS[str(nivel)])  #Le estaremos entregando las coordenadas de la tupla, que se entra x y y dentor de parentesis 
 
-                #Crear de nuevo la lista de enemigos 
+                #Crear lista de enemigos 
                 lista_enemigos = []
                 for ene in world.lista_enemigo:   #Con este for estamos iterando entre la lista de los enemigos de la clase mundo donde estamos guardando todos nuestros enemigos para luego dibujarolos  
                     lista_enemigos.append(ene)
 
-                #Añadir de nuevo los items desde la data del nivel 
+                #Añadir items desde la data del nivel 
                 for item in world.lista_item:
                     grupo_items.add(item)
 
-    pygame.display.update()  #Es necesario ya que esto mantendr las actualizaciones que se hagan en el programa, mantener los cambios de la pantalla: dibujar objetos, actualizar imagenes etc. 
+        # Modificar la sección de game over en el bucle principal
+        if jugador.vivo == False:
+            ventana.blit(game_over_image, (0, 0))
+
+        for event in pygame.event.get(): #Con el "event.get" de la libreria estariamos obteniendo que fue lo que se hizo: click una tecla etc.
+            if event.type == pygame.QUIT:   #Esto estaria evaluando en que momento sucede un evento del tipo salir, por ejemplo la x de la ventana o el alt f4
+                run = False
+
+            #Evaluar  cuando estamos presionando determinada tecla
+            if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_a:
+                    mover_izquierda = True
+                if event.key == pygame.K_d:
+                    mover_derecha = True
+                if event.key == pygame.K_w:
+                    mover_arriba = True
+                if event.key == pygame.K_s:
+                    mover_abajo = True
+                if event.key == pygame.K_e:
+                    if world.cambiar_puerta(jugador, tile_list):   #Le entregamos a la funcion el jugador ya que evaluamos que tan cerca esta para abirir la puerta y el tile_list para saber que tiles hay
+                        print("Puerta Cambiada")
+
+            #Para cuando se suelte la tecla que se esta presionando
+            if event.type == pygame.KEYUP: 
+                if event.key == pygame.K_a:
+                    mover_izquierda = False
+                if event.key == pygame.K_d:
+                    mover_derecha = False
+                if event.key == pygame.K_w:
+                    mover_arriba = False
+                if event.key == pygame.K_s:
+                    mover_abajo = False
+
+            #Con este comprobamos en que momento se presiona el boton de reinicio 
+            if event.type == pygame.MOUSEBUTTONDOWN:
+                if boton_reinicio.collidepoint(event.pos) and not jugador.vivo:
+                    jugador.vivo = True
+                    jugador.energia = 100 
+                    jugador.score = 0
+                    nivel = 1
+                    world_data = resetear_mundo()
+
+                    world_data_fondo = cargar_csv(f"niveles/nivel_{nivel}_fondo.csv")
+                    world_data_principal = cargar_csv(f"niveles/nivel_{nivel}_principal.csv")
+
+                    world = Mundo()
+                    world.process_data(world_data_fondo, world_data_principal, tile_list, item_images, animaciones_enemigos)
+                    jugador.actualizar_coordenadas(constantes.COORDENADAS[str(nivel)])  #Le estaremos entregando las coordenadas de la tupla, que se entra x y y dentor de parentesis 
+
+                    #Crear de nuevo la lista de enemigos 
+                    lista_enemigos = []
+                    for ene in world.lista_enemigo:   #Con este for estamos iterando entre la lista de los enemigos de la clase mundo donde estamos guardando todos nuestros enemigos para luego dibujarolos  
+                        lista_enemigos.append(ene)
+
+                    #Añadir de nuevo los items desde la data del nivel 
+                    for item in world.lista_item:
+                        grupo_items.add(item)
+
+        pygame.display.update()  #Es necesario ya que esto mantendr las actualizaciones que se hagan en el programa, mantener los cambios de la pantalla: dibujar objetos, actualizar imagenes etc. 
 
 pygame.quit()

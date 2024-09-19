@@ -26,8 +26,11 @@ BLANCO = (255, 255, 255)
 ROJO_OSCURO = (139, 0, 0)
 NEGRO = (0, 0, 0)
 AMARILLO = (255, 255, 0)
+COLOR_FONDO = (0, 0, 0)
 
-BACKGROUND = "assets/images/fondo/Mapa_120_60.png"
+#Fondos
+BACKGROUND_MENU_INICIO = "assets/images/fondo/fondo_mapa.png"
+BACKGROUND_GAME_OVER = "assets/images/fondo/game_over.png"
 
 #Otros 
 VELOCIDAD = 10  #Velocidad del personaje
