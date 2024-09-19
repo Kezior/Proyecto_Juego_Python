@@ -102,6 +102,15 @@ with open("niveles/nivel_fondo_1.csv", newline= '') as csvfile:   #nivel_test_da
             world_data[x][y] = int(columna)
 '''
 
+# Función para cambiar la música
+def cambiar_musica(nueva_musica):
+    global musica_actual
+    if musica_actual != nueva_musica:
+        if musica_actual:
+            musica_actual.stop()
+        nueva_musica.play(-1)
+        musica_actual = nueva_musica
+
 #VARIABLES 
 #Variable para las camaras, le damos los valores de 0, 0 que serian eje x y eje y
 posicion_pantalla = [0, 0] 
@@ -111,6 +120,9 @@ nivel = 1
 background_menu_inicio = pygame.image.load(constantes.BACKGROUND_MENU_INICIO).convert_alpha()
 # Definir el rectángulo para el botón de reinicio
 boton_reinicio = pygame.Rect(constantes.WIDHT_WINDOW / 2 - 100, constantes.HEIGHT_WINDOW / 2 + 280, 200, 50)
+# Variable para rastrear la música actual
+musica_actual = None
+
 
 #BOTONES DE INICIO
 #Definir el rectángulo para el botón de iniciar el juego
@@ -199,6 +211,9 @@ item_images = [coin_images, [posion_roja]]   #Se comporta como listas, y como la
 game_over_image = pygame.image.load(constantes.BACKGROUND_GAME_OVER).convert_alpha()
 game_over_image = pygame.transform.scale(game_over_image, (constantes.WIDHT_WINDOW, constantes.HEIGHT_WINDOW))
 
+#Cargar la imagen de la victoria
+win_image = pygame.image.load(constantes.BACKGROUND_WIN).convert_alpha()
+win_image = pygame.transform.scale(win_image, (constantes.WIDHT_WINDOW, constantes.HEIGHT_WINDOW))
 
 #Cargamos en una variable cada capa del mundo / Usando la funcion que se encargar de cargar el csv del mapa
 world_data_fondo = cargar_csv(f"niveles/nivel_{nivel}_fondo.csv")
@@ -263,12 +278,27 @@ mover_derecha = False
 #Controlar el framerate para controlar el movimiento del personaje
 reloj = pygame.time.Clock()
 
+'''Poner musica en el juego de forma global
 #Cargar la musica
 pygame.mixer.init()
 pygame.mixer.music.load("assets/sounds/music.mp3")
 pygame.mixer.music.play(-1)
+'''
+    
+# Cargar las músicas
+musica_inicio = pygame.mixer.Sound("assets/sounds/menu_de_inicio.mp3")
+musica_nivel1 = pygame.mixer.Sound("assets/sounds/nivel_1.mp3")
+musica_nivel2 = pygame.mixer.Sound("assets/sounds/nivel_2.mp3")
+musica_game_over = pygame.mixer.Sound("assets/sounds/game_over.mp3")
+musica_win = pygame.mixer.Sound("assets/sounds/menu_de_inicio.mp3")
 
-sonido_disapro = pygame.mixer.Sound("assets/sounds/disaprove.mp3")
+# Cargar el sonido del disparo
+sonido_disparo = pygame.mixer.Sound("assets/sounds/disparo.mp3")
+
+# Ajustar el volumen 
+volumen = 0.5
+for musica in [musica_inicio, musica_nivel1, musica_nivel2, musica_game_over, musica_win, sonido_disparo]:
+    musica.set_volume(volumen)
 
 #Mostrar el menu de inicio
 mostrar_menu = True
@@ -277,11 +307,13 @@ mostrar_menu = True
 run = True  
 while run == True:
     if mostrar_menu: #Es lo mismo que decir if mostrar_menu == True:
+        if not pygame.mixer.get_busy():
+            cambiar_musica(musica_inicio)
         ventana.blit(background_menu_inicio, (0, 0))
         #Dibujamos el rectangulo para saber donde esta el boton de iniciar y el de salir 
         pygame.draw.rect(ventana, constantes.BLANCO, boton_iniciar, 2, 15) #El 2 es el grosor y el 15 es el radio de las esquinas 
         pygame.draw.rect(ventana, constantes.BLANCO, boton_salir, 2, 15) 
-        pygame.display.update()        
+        pygame.display.update()  
 
         for event in pygame.event.get(): #Se usa para cerrar la ventana 
             if event.type == pygame.QUIT:
@@ -302,6 +334,10 @@ while run == True:
         #ventana.blit((background_nivel_1), [0, 0])   #Con el "blit" ponemos una imagen de fondo 
 
         if jugador.vivo == True:
+            if nivel == 1:
+                cambiar_musica(musica_nivel1)
+            elif nivel == 2:
+                cambiar_musica(musica_nivel2)
 
             #dibujar_grid()
 
@@ -319,7 +355,7 @@ while run == True:
                 delta_y = constantes.VELOCIDAD   
 
             #Mover al jugador
-            posicion_pantalla, nivel_completado = jugador.movimiento(delta_x, delta_y, world.obstaculos_tiles, world.exit_tile) #Llamando el mecanismo creado en el archivo del personaje para que se mueva 
+            posicion_pantalla, nivel_completado = jugador.movimiento(delta_x, delta_y, world.obstaculos_tiles, world.exit_tile, world.win_tile) #Llamando el mecanismo creado en el archivo del personaje para que se mueva 
             #print(posicion_pantalla) #Con este print vemos las coordenadas del jugador, para un control interno
 
             #Actualizar mapas
@@ -338,7 +374,7 @@ while run == True:
             if bala:
                 grupo_balas.add(bala)
                 #Luego de agregar las balas al grupo, llamamos la variable con el sonido del disparo que hayamos puesto
-                sonido_disapro.play()
+                sonido_disparo.play()
             for bala in grupo_balas:
                 damage, pos_damage = bala.update(lista_enemigos, world.obstaculos_tiles)   #Le entregamos la lista de enemigos para que se generen las colisones de las balas con esa lista de enemigos 
                 if damage:   #Es lo mismo que decir: si damage es distinto de 0 
@@ -362,7 +398,7 @@ while run == True:
             if ene.energia == 0:   #Usamos la caracteristica "energia" de la clase personaje para identificar cuando este llega a 0 
                 lista_enemigos.remove(ene)    #Removemos dicho enemigo de la lista en la que se estan imprimiendo los enemigos
             if ene.energia > 0:   #Dejamos esta condicion para que se dibujen en pantalla siempre y cuando su vida no sea 0
-                ene.enemigos(jugador, posicion_pantalla, world.obstaculos_tiles, world.exit_tile)
+                ene.enemigos(jugador, posicion_pantalla, world.obstaculos_tiles, world.exit_tile, world.win_tile)
                 ene.draw(ventana)
 
         #Dibujar el arma 
@@ -388,7 +424,11 @@ while run == True:
         if nivel_completado == True:
             if nivel < constantes.NIVEL_MAXIMO:
                 nivel += 1
-
+                if nivel == 1:
+                    cambiar_musica(musica_nivel1)
+                elif nivel == 2:
+                    cambiar_musica(musica_nivel2)
+                
                 ''' Forma en la que se cargaba el nivel de nuevo, antes de crear la funcion que lo simplifica 
                 world_data = resetear_mundo()
                 #Cargar el archivo con el nuevo nivel 
@@ -415,9 +455,15 @@ while run == True:
                 for item in world.lista_item:
                     grupo_items.add(item)
 
-        # Modificar la sección de game over en el bucle principal
+        # Evaluar si el jugador perdio 
         if jugador.vivo == False:
+            cambiar_musica(musica_game_over)
             ventana.blit(game_over_image, (0, 0))
+        
+        # Evaluar si el jugador gano 
+        if jugador.win == True:
+            cambiar_musica(musica_win)
+            ventana.blit(win_image, (0, 0))
 
         for event in pygame.event.get(): #Con el "event.get" de la libreria estariamos obteniendo que fue lo que se hizo: click una tecla etc.
             if event.type == pygame.QUIT:   #Esto estaria evaluando en que momento sucede un evento del tipo salir, por ejemplo la x de la ventana o el alt f4

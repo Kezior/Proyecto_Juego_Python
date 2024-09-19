@@ -31,7 +31,7 @@ COLOR_FONDO = (0, 0, 0)
 #Fondos
 BACKGROUND_MENU_INICIO = "assets/images/fondo/fondo_mapa.png"
 BACKGROUND_GAME_OVER = "assets/images/fondo/game_over.png"
-
+BACKGROUND_WIN = "assets/images/fondo/win.png"
 #Otros 
 VELOCIDAD = 10  #Velocidad del personaje
 VELOCIDAD_ENEMIGOS = 3 #Velocidad de los enemigos 
@@ -40,5 +40,5 @@ RANGO_ATAQUE = 20 #Distancia a al que los enemigos empezaran a atacar
 VELOCIDAD_BALAS = 20
 COOLDOWN_BALAS = 200
 FPS = 60
-COORDENADAS = {"1":(800,2200), "2":(800,2200)}  #Creamos una constante que este guardando las coordenadas donde queremos que aparezca nuestro personaje 
+COORDENADAS = {"1":(800,2200), "2":(800,2200), "3":(800,2200)}  #Creamos una constante que este guardando las coordenadas donde queremos que aparezca nuestro personaje 
 NIVEL_MAXIMO = 2

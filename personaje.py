@@ -7,6 +7,7 @@ class Personaje(): #Las clases siempre la primera en mayuscula
         self.score = 0
         self.energia = energia
         self.vivo = True
+        self.win = False
         self.flip = False
         self.animaciones = animaciones 
         #Imagen de la animacion que se esta mostrando actualmente
@@ -25,7 +26,7 @@ class Personaje(): #Las clases siempre la primera en mayuscula
         self.shape.center = (tupla[0], tupla[1])
 
 
-    def enemigos(self, jugador, posicion_pantalla, obstaculos_tiles, exit_tile):
+    def enemigos(self, jugador, posicion_pantalla, obstaculos_tiles, exit_tile, win_tile):
         #Lista vacia del clipped_line
         clipped_line = ()
         #Variables que usaremos para manejar la posicion de los enemigos
@@ -59,7 +60,7 @@ class Personaje(): #Las clases siempre la primera en mayuscula
             if self.shape.centery < jugador.shape.centery:
                 ene_dy = constantes.VELOCIDAD_ENEMIGOS 
 
-        self.movimiento(ene_dx, ene_dy, obstaculos_tiles, exit_tile)  #Usamos el metodo ya creado de movimiento en el que le entregamos las variables de su posicion y de los obstaculos para que no traspasen paredes 
+        self.movimiento(ene_dx, ene_dy, obstaculos_tiles, exit_tile, win_tile)  #Usamos el metodo ya creado de movimiento en el que le entregamos las variables de su posicion y de los obstaculos para que no traspasen paredes 
 
         #Atacar al jugador 
         if distancia < constantes.RANGO_ATAQUE and jugador.golpe == False: 
@@ -94,9 +95,10 @@ class Personaje(): #Las clases siempre la primera en mayuscula
         interfaz.blit(imagen_flip, self.shape)
         #pygame.draw.rect(interfaz, constantes.COLOR_PERSONAJE, self.shape, 1)   #Estamos dibujando el cuadrado o figura que le asiganamos a la imagen del personaje, meramente para un control visual
 
-    def movimiento(self, delta_x, delta_y, obstaculos_tiles, exit_tile): #Como se movera nuestro personaje 
+    def movimiento(self, delta_x, delta_y, obstaculos_tiles, exit_tile, win_tile): #Como se movera nuestro personaje 
         posicion_pantalla = [0, 0]
         nivel_completado = False  #Que usaremos pra identificar en que momento el personaje pasara al proximo nivel 
+        juego_ganado = False
         if delta_x < 0:   #Condicion que le dira al programa cuando se debe invertir el personaje, al saber para donde se esta mviendo en el eje x 
             self.flip = True
         if delta_x > 0:
@@ -128,6 +130,11 @@ class Personaje(): #Las clases siempre la primera en mayuscula
                 if exit_tile[1].colliderect(self.shape):
                     nivel_completado = True
                     print("Nivel Completado")
+
+            if win_tile is not None:
+                if win_tile[1].colliderect(self.shape):
+                    self.win = True
+                    print("Juego Ganado")
 
             #Actualizar la pantalla basado en la posicion del jugadr 
             #Mover la camara a la izquierda o derecha 

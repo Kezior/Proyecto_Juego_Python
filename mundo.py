@@ -13,6 +13,7 @@ class Mundo():
         self.capa_principal = []
         self.obstaculos_tiles = []
         self.exit_tile = None #Este lo usaremos para que el personaje pase de un nivel al otro, cuando toque ese tile
+        self.win_tile = None
         self.lista_item = []
         self.lista_enemigo =[]
         self.puertas_cerradas_tiles = []
@@ -50,6 +51,9 @@ class Mundo():
                 #Tile de salida 
                 elif tile == 1197:    #El numero es el ID del tile que queremos que funciones como exit 
                     self.exit_tile = tile_data
+
+                elif tile == 1053:
+                    self.win_tile = tile_data
                 
                 #Condicion para crear las monedas
                 elif tile == 86:     #El numero es el ID del tile que represena el item (moneda en este caso)
