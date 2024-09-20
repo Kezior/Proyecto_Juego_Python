@@ -111,6 +111,39 @@ def cambiar_musica(nueva_musica):
         nueva_musica.play(-1)
         musica_actual = nueva_musica
 
+#Funcion para reinciar el juego, teniendo en cuenta las variables del movimiento para evitar errores al momento de reiniciar, Reseteando el mundo creando todo desde 0
+def reiniciar_juego():
+    #Usamos global para modificar variables y no las tome como locales
+    global nivel, world, lista_enemigos, grupo_items, mover_arriba, mover_abajo, mover_izquierda, mover_derecha
+
+    # Reiniciar variables de movimiento
+    mover_arriba = False
+    mover_abajo = False
+    mover_izquierda = False
+    mover_derecha = False
+
+    jugador.vivo = True
+    jugador.win = False
+    jugador.energia = 100 
+    jugador.score = 0
+    nivel = 1
+
+    world_data_fondo = cargar_csv(f"niveles/nivel_{nivel}_fondo.csv")
+    world_data_principal = cargar_csv(f"niveles/nivel_{nivel}_principal.csv")
+
+    world = Mundo()
+    world.process_data(world_data_fondo, world_data_principal, tile_list, item_images, animaciones_enemigos)
+    jugador.actualizar_coordenadas(constantes.COORDENADAS[str(nivel)])
+
+    lista_enemigos = []
+    for ene in world.lista_enemigo:
+        lista_enemigos.append(ene)
+
+    grupo_items.empty()
+    for item in world.lista_item:
+        grupo_items.add(item)
+    
+
 #VARIABLES 
 #Variable para las camaras, le damos los valores de 0, 0 que serian eje x y eje y
 posicion_pantalla = [0, 0] 
@@ -118,10 +151,14 @@ posicion_pantalla = [0, 0]
 nivel = 1
 #Variable que almacena la imagen del fondo para el menu de inicio  
 background_menu_inicio = pygame.image.load(constantes.BACKGROUND_MENU_INICIO).convert_alpha()
-# Definir el rectángulo para el botón de reinicio
-boton_reinicio = pygame.Rect(constantes.WIDHT_WINDOW / 2 - 100, constantes.HEIGHT_WINDOW / 2 + 280, 200, 50)
 # Variable para rastrear la música actual
 musica_actual = None
+
+#Definir las variables de movimiento del jugador
+mover_arriba = False
+mover_abajo = False
+mover_izquierda = False
+mover_derecha = False
 
 
 #BOTONES DE INICIO
@@ -129,6 +166,10 @@ musica_actual = None
 boton_iniciar = pygame.Rect(constantes.WIDHT_WINDOW / 2 - 100, constantes.HEIGHT_WINDOW / 2 + 200, 200, 50)
 #Definir el rectangulo para el boton salir del juego 
 boton_salir = pygame.Rect(constantes.WIDHT_WINDOW / 2 - 100, constantes.HEIGHT_WINDOW / 2 + 360, 200, 50)
+
+#BOTON DE REINICIO
+# Definir el rectángulo para el botón de reinicio
+boton_reinicio = pygame.Rect(constantes.WIDHT_WINDOW / 2 - 100, constantes.HEIGHT_WINDOW / 2 + 280, 200, 50)
 
 
 #Fuentes que usaremos en el juego 
@@ -139,6 +180,7 @@ font_reinicio = pygame.font.Font("assets/fonts/Kaph-Regular.ttf", 20)
 #Fuente para el texto de game over y el texto del boton "Reinicio" si se quiere usar / se esta omitiendo ya que se creo una imagen con el game over, en el que solo se dibuja el boton de reinicio pero invisible sin relleno
 game_over_text = font_game_over.render("Game Over", True, constantes.BLANCO)
 texto_boton_reinicio = font_reinicio.render("Reiniciar", True, constantes.NEGRO)
+
 
 #ACA ESTAMOS IMPORTANDO LAS IMAGENES
 #Vida 
@@ -215,7 +257,7 @@ game_over_image = pygame.transform.scale(game_over_image, (constantes.WIDHT_WIND
 win_image = pygame.image.load(constantes.BACKGROUND_WIN).convert_alpha()
 win_image = pygame.transform.scale(win_image, (constantes.WIDHT_WINDOW, constantes.HEIGHT_WINDOW))
 
-#Cargamos en una variable cada capa del mundo / Usando la funcion que se encargar de cargar el csv del mapa
+#Cargamos en una variable cada capa del mundo / Usando la funcion que se encarga de cargar el csv del mapa
 world_data_fondo = cargar_csv(f"niveles/nivel_{nivel}_fondo.csv")
 world_data_principal = cargar_csv(f"niveles/nivel_{nivel}_principal.csv")
 
@@ -269,23 +311,14 @@ grupo_items.add(coin)
 grupo_items.add(posion)
 """  
 
-#Definir las variables de movimiento del jugador
-mover_arriba = False
-mover_abajo = False
-mover_izquierda = False
-mover_derecha = False
-
-#Controlar el framerate para controlar el movimiento del personaje
-reloj = pygame.time.Clock()
-
+#MUSICA
 '''Poner musica en el juego de forma global
 #Cargar la musica
 pygame.mixer.init()
 pygame.mixer.music.load("assets/sounds/music.mp3")
 pygame.mixer.music.play(-1)
-'''
-    
-# Cargar las músicas
+'''  
+# Cargar la música de cada pantalla
 musica_inicio = pygame.mixer.Sound("assets/sounds/menu_de_inicio.mp3")
 musica_nivel1 = pygame.mixer.Sound("assets/sounds/nivel_1.mp3")
 musica_nivel2 = pygame.mixer.Sound("assets/sounds/nivel_2.mp3")
@@ -303,6 +336,8 @@ for musica in [musica_inicio, musica_nivel1, musica_nivel2, musica_game_over, mu
 #Mostrar el menu de inicio
 mostrar_menu = True
 
+#Controlar el framerate para controlar el movimiento del personaje
+reloj = pygame.time.Clock()
 #Creamos el bucle general del juego
 run = True  
 while run == True:
@@ -323,6 +358,20 @@ while run == True:
                     mostrar_menu = False
                 if boton_salir.collidepoint(event.pos):
                     run = False
+    
+    elif jugador.win == True:
+        cambiar_musica(musica_win)
+        ventana.blit(win_image, (0, 0))
+        pygame.draw.rect(ventana, constantes.BLANCO, boton_reinicio, 2, 15)
+        pygame.display.update()
+
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                run = False
+            if event.type == pygame.MOUSEBUTTONDOWN:
+                if boton_reinicio.collidepoint(event.pos):
+                    mostrar_menu = True
+                    reiniciar_juego()
     else:
         #Como ponemos que vaya a esos 60 FPS
         reloj.tick(constantes.FPS)
@@ -459,11 +508,6 @@ while run == True:
         if jugador.vivo == False:
             cambiar_musica(musica_game_over)
             ventana.blit(game_over_image, (0, 0))
-        
-        # Evaluar si el jugador gano 
-        if jugador.win == True:
-            cambiar_musica(musica_win)
-            ventana.blit(win_image, (0, 0))
 
         for event in pygame.event.get(): #Con el "event.get" de la libreria estariamos obteniendo que fue lo que se hizo: click una tecla etc.
             if event.type == pygame.QUIT:   #Esto estaria evaluando en que momento sucede un evento del tipo salir, por ejemplo la x de la ventana o el alt f4
@@ -497,11 +541,13 @@ while run == True:
             #Con este comprobamos en que momento se presiona el boton de reinicio 
             if event.type == pygame.MOUSEBUTTONDOWN:
                 if boton_reinicio.collidepoint(event.pos) and not jugador.vivo:
+                    reiniciar_juego()
+
+                    """Forma manual de reiniciar el juego, se creo una funcion para simplificar el proceso teniendo en cuenta todas las variables para evitar errores
                     jugador.vivo = True
                     jugador.energia = 100 
                     jugador.score = 0
                     nivel = 1
-                    world_data = resetear_mundo()
 
                     world_data_fondo = cargar_csv(f"niveles/nivel_{nivel}_fondo.csv")
                     world_data_principal = cargar_csv(f"niveles/nivel_{nivel}_principal.csv")
@@ -518,7 +564,7 @@ while run == True:
                     #Añadir de nuevo los items desde la data del nivel 
                     for item in world.lista_item:
                         grupo_items.add(item)
-
+                    """
         pygame.display.update()  #Es necesario ya que esto mantendr las actualizaciones que se hagan en el programa, mantener los cambios de la pantalla: dibujar objetos, actualizar imagenes etc. 
 
 pygame.quit()

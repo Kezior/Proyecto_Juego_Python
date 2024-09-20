@@ -33,7 +33,7 @@ BACKGROUND_MENU_INICIO = "assets/images/fondo/fondo_mapa.png"
 BACKGROUND_GAME_OVER = "assets/images/fondo/game_over.png"
 BACKGROUND_WIN = "assets/images/fondo/win.png"
 #Otros 
-VELOCIDAD = 10  #Velocidad del personaje
+VELOCIDAD = 40  #Velocidad del personaje
 VELOCIDAD_ENEMIGOS = 3 #Velocidad de los enemigos 
 RANGO = 200    #Que usaremos para determinar hasta que punto los enemigos nos detectan
 RANGO_ATAQUE = 20 #Distancia a al que los enemigos empezaran a atacar 
