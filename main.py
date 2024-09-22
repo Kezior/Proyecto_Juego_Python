@@ -208,18 +208,34 @@ for eni in tipo_enemigos:
     num_animaciones = contar_elementos(ruta_temp)
     for i in range(num_animaciones):
         img_enemigo = pygame.image.load(f"{ruta_temp}\\{eni}_{i+1}.png").convert_alpha()
-        img_enemigo = escalar_img(img_enemigo, constantes.SCALE_ENEMIGOS)
+        #Cambiar la escala de los enemigos puntualmente 
+        if eni == "skeleton":
+            img_enemigo = escalar_img(img_enemigo, 1.5)
+        if eni == "skeleton2":
+            img_enemigo = escalar_img(img_enemigo, 1.5)
+        if eni == "golem_blue":
+            img_enemigo = escalar_img(img_enemigo, 1.5)
+        if eni == "golem_orange":
+            img_enemigo = escalar_img(img_enemigo, 1.5)
+        if eni == "boss_dark_samurai":
+            img_enemigo = escalar_img(img_enemigo, 1.5)
+        if eni == "Boss(final)":
+            img_enemigo = escalar_img(img_enemigo, 1.5)
+
+        else:
+            img_enemigo = escalar_img(img_enemigo, constantes.SCALE_ENEMIGOS)
+
         lista_temp.append(img_enemigo)
 
     animaciones_enemigos.append(lista_temp)
     #El numero para identificar que animacion de enemigo se tiene en la lista es la posicion de las carpetas empezando desde 0 en adelante. En la carpeta de "images-characters-enemies"
 
 #Arma 
-imagen_pistola = pygame.image.load(f"assets\\images\\weapons\\arma_1.png").convert_alpha()
-imagen_pistola = escalar_img(imagen_pistola, constantes.SCALE_ARMA)
+imagen_pistola = pygame.image.load(f"assets\\images\\weapons\\arma_2.png").convert_alpha()
+imagen_pistola = escalar_img(imagen_pistola, constantes.SCALE_ARMA) 
 
 #Balas
-imagen_balas = pygame.image.load(f"assets\\images\\weapons\\bullet_1.png").convert_alpha()
+imagen_balas = pygame.image.load(f"assets\\images\\weapons\\proyectil_1.png").convert_alpha()
 imagen_balas = escalar_img(imagen_balas, constantes.SCALE_BALA)
 
 #Cargar imagenes del mundo 
@@ -278,7 +294,7 @@ goblin_2 = Personaje(700, 100, animacion_enemigos[2], 100, 2)
 
 #Crear lista de enemigos 
 lista_enemigos = []
-for ene in world.lista_enemigo:   #Con este for estamos iterando entre la lista de los enemigos de la clase mundo donde estamos guardando todos nuestros enemigos para luego dibujarolos  
+for ene in world.lista_enemigo:   #Con este for estamos iterando entre la lista de los enemigos de la clase mundo donde estamos guardando todos nuestros enemigos para luego dibujarlos  
     lista_enemigos.append(ene)
 
 

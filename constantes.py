@@ -4,9 +4,9 @@ WIDHT_WINDOW = 1920    #Ancho
 #HEIGHT_PERSONAJE = 20 
 #WIDHT_PERSONAJE = 20 
 SCALE_PERSONAJE = 1.2
-SCALE_ENEMIGOS = 0.7
-SCALE_ARMA = 0.03
-SCALE_BALA = 0.02
+SCALE_ENEMIGOS = 1.4
+SCALE_ARMA = 0.8
+SCALE_BALA = 0.15
 SCALE_CORAZON = 3
 SCALE_POSION = 0.8
 SCALE_MONEDA = 1.3
@@ -32,6 +32,7 @@ COLOR_FONDO = (0, 0, 0)
 BACKGROUND_MENU_INICIO = "assets/images/fondo/fondo_mapa.png"
 BACKGROUND_GAME_OVER = "assets/images/fondo/game_over.png"
 BACKGROUND_WIN = "assets/images/fondo/win.png"
+
 #Otros 
 VELOCIDAD = 40  #Velocidad del personaje
 VELOCIDAD_ENEMIGOS = 3 #Velocidad de los enemigos 
