@@ -163,9 +163,9 @@ mover_derecha = False
 
 #BOTONES DE INICIO
 #Definir el rectángulo para el botón de iniciar el juego
-boton_iniciar = pygame.Rect(constantes.WIDHT_WINDOW / 2 - 100, constantes.HEIGHT_WINDOW / 2 + 200, 200, 50)
+boton_iniciar = pygame.Rect(constantes.WIDHT_WINDOW / 2 - 270, constantes.HEIGHT_WINDOW / 2 - 300, 600, 500)
 #Definir el rectangulo para el boton salir del juego 
-boton_salir = pygame.Rect(constantes.WIDHT_WINDOW / 2 - 100, constantes.HEIGHT_WINDOW / 2 + 360, 200, 50)
+boton_salir = pygame.Rect(constantes.WIDHT_WINDOW / 2 - 80, constantes.HEIGHT_WINDOW / 2 + 345, 200, 50)
 
 #BOTON DE REINICIO
 # Definir el rectángulo para el botón de reinicio

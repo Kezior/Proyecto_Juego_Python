@@ -29,7 +29,7 @@ AMARILLO = (255, 255, 0)
 COLOR_FONDO = (0, 0, 0)
 
 #Fondos
-BACKGROUND_MENU_INICIO = "assets/images/fondo/fondo_mapa.png"
+BACKGROUND_MENU_INICIO = "assets/images/fondo/menu.png"
 BACKGROUND_GAME_OVER = "assets/images/fondo/game_over.png"
 BACKGROUND_WIN = "assets/images/fondo/win.png"
 
