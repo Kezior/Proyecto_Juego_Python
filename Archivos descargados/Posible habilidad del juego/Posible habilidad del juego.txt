@@ -1,0 +1,3 @@
+Podria ser una habilidad en la que presionando una tecla se transforme en el caballa, para andar mas rapido, con un tiempo limitida y un cooldown para que no lo pueda usar tan seguido.
+
+Quiza poner en pantalla un icono que inidique cuando se puede usar 
