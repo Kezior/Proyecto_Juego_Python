@@ -8,7 +8,11 @@ class DamageText(pygame.sprite.Sprite):
         self.rect.center = (x,y)
         self.contador = 0    #Creamos este contador que iniciamos en 0 para luego tener control de en que momento se debe borrar el texto de daño en la pantalla 
         
-    def update(self):
+    def update(self, posicion_pantalla):
+        #Reposicionar texto de daño segun la pantalla o camara 
+        self.rect.x += posicion_pantalla[0]
+        self.rect.y += posicion_pantalla[1]
+
         self.rect.y -= 2   #Se debe restar para que vaya hacia arriba, con este update estamos creando el movimineto del texto del daño al enemigo 
         self.contador += 1
         if self.contador > 25:
