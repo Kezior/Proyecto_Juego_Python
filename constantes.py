@@ -40,6 +40,6 @@ RANGO = 200    #Que usaremos para determinar hasta que punto los enemigos nos de
 RANGO_ATAQUE = 20 #Distancia a al que los enemigos empezaran a atacar 
 VELOCIDAD_BALAS = 20
 COOLDOWN_BALAS = 200
-FPS = 60
+FPS = 120
 COORDENADAS = {"1":(800,2200), "2":(800,2200), "3":(800,2200)}  #Creamos una constante que este guardando las coordenadas donde queremos que aparezca nuestro personaje 
 NIVEL_MAXIMO = 2
