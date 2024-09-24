@@ -362,8 +362,8 @@ while run == True:
             cambiar_musica(musica_inicio)
         ventana.blit(background_menu_inicio, (0, 0))
         #Dibujamos el rectangulo para saber donde esta el boton de iniciar y el de salir 
-        pygame.draw.rect(ventana, constantes.BLANCO, boton_iniciar, 2, 15) #El 2 es el grosor y el 15 es el radio de las esquinas 
-        pygame.draw.rect(ventana, constantes.BLANCO, boton_salir, 2, 15) 
+        #pygame.draw.rect(ventana, constantes.BLANCO, boton_iniciar, 2, 15) #El 2 es el grosor y el 15 es el radio de las esquinas 
+        pygame.draw.rect(ventana, constantes.ROJO, boton_salir, 2, 15) 
         pygame.display.update()  
 
         for event in pygame.event.get(): #Se usa para cerrar la ventana 
