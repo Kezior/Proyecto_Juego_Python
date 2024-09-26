@@ -261,7 +261,7 @@ ruta_img = "assets\images\items\coin"
 num_coin_images = contar_elementos(ruta_img)
 #print(f"Numero de imagenes de monedas: {num_coin_images}")     #Con esto solo vemos en la terminal el resultado del conteo para saber que la funcion lo esta haciendo correctamente
 for i in range(num_coin_images):
-    img = pygame.image.load(f"assets\images\items\coin\coin_{i+1}.png") #Importante usar el f para poner variables dentro del texto 
+    img = pygame.image.load(f"assets\images\items\coin\coin_{i+1}.png").convert_alpha() #Importante usar el f para poner variables dentro del texto 
     img = escalar_img(img, constantes.SCALE_MONEDA)
     coin_images.append(img) 
 #Creamos una lista que guarde las animaciones/imagenes de los items para luego llamarlos en las clases
@@ -275,9 +275,11 @@ game_over_image = pygame.transform.scale(game_over_image, (constantes.WIDHT_WIND
 win_image = pygame.image.load(constantes.BACKGROUND_WIN).convert_alpha()
 win_image = pygame.transform.scale(win_image, (constantes.WIDHT_WINDOW, constantes.HEIGHT_WINDOW))
 
-# Cargar imágenes del portal /CORREGIR USANDO LA FUNCION DE CONTAR ELEMENTOS PARA QUE SEA DINAMICO Y AUTOMATICO
+#Cargar imágenes del portal
 portal_images = []
-for i in range(8):
+ruta_portal_img = "assets/images/portal"
+num_portal_img = contar_elementos(ruta_portal_img)
+for i in range(num_portal_img):
     img = pygame.image.load(f"assets/images/portal/portal_ ({i+1}).png").convert_alpha()
     img = escalar_img(img, constantes.SCALE_PORTAL)
     portal_images.append(img)
@@ -292,7 +294,7 @@ world = Mundo()
 world.process_data(world_data_fondo, world_data_principal, tile_list, item_images, animaciones_enemigos, portal_images)
 
 #Crear un jugador de la clase personaje
-jugador = Personaje(constantes.COORDENADAS[str(nivel)][0], constantes.COORDENADAS[str(nivel)][1], animaciones, 50, 1) #Creamos una varable usando la clase que importamos del personaje, dandole las coordenadas x y y dentro del argumento
+jugador = Personaje(constantes.COORDENADAS[str(nivel)][0], constantes.COORDENADAS[str(nivel)][1], animaciones, 50, 1, 0, 0, 0) #Creamos una varable usando la clase que importamos del personaje, dandole las coordenadas x y y dentro del argumento
 
 """""
 De esta forma estamos creando los enemigos de forma manual pero lo haremos automatico relacionando tiles en el mapa 

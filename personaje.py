@@ -3,7 +3,7 @@ import math
 import constantes
 
 class Personaje(): #Las clases siempre la primera en mayuscula
-    def __init__(self, x, y, animaciones, energia, tipo, daño=10, rango_vision=constantes.RANGO, velocidad=constantes.VELOCIDAD_ENEMIGOS):   #Estariamos llamando al constructor de pygame 
+    def __init__(self, x, y, animaciones, energia, tipo, daño, rango_vision, velocidad):   #Estariamos llamando al constructor de pygame 
         self.score = 0
         self.energia = energia
         self.vivo = True
@@ -52,13 +52,13 @@ class Personaje(): #Las clases siempre la primera en mayuscula
         distancia = math.sqrt(((self.shape.centerx - jugador.shape.centerx)**2) + (self.shape.centery - jugador.shape.centery)**2 )
         if not clipped_line and distancia < self.rango_vision:
             if self.shape.centerx > jugador.shape.centerx:
-                ene_dx = -self.velocidad  # Cambiado
+                ene_dx = -self.velocidad 
             if self.shape.centerx < jugador.shape.centerx:
-                ene_dx = self.velocidad  # Cambiado
+                ene_dx = self.velocidad  
             if self.shape.centery > jugador.shape.centery:
-                ene_dy = -self.velocidad  # Cambiado
+                ene_dy = -self.velocidad  
             if self.shape.centery < jugador.shape.centery:
-                ene_dy = self.velocidad  # Cambiado
+                ene_dy = self.velocidad  
 
         self.movimiento(ene_dx, ene_dy, obstaculos_tiles, exit_tile, win_tile)  #Usamos el metodo ya creado de movimiento en el que le entregamos las variables de su posicion y de los obstaculos para que no traspasen paredes 
 
