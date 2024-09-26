@@ -21,7 +21,6 @@ class Personaje(): #Las clases siempre la primera en mayuscula
         self.golpe = False  #Para identificar cuando un jugador sea golpeado
         self.ultimo_golpe = pygame.time.get_ticks()  #Lo usaremos para el cooldown entre ataques de los enemigos 
 
-           
     def actualizar_coordenadas(self, tupla):
         self.shape.center = (tupla[0], tupla[1])
 
@@ -63,7 +62,7 @@ class Personaje(): #Las clases siempre la primera en mayuscula
         self.movimiento(ene_dx, ene_dy, obstaculos_tiles, exit_tile, win_tile)  #Usamos el metodo ya creado de movimiento en el que le entregamos las variables de su posicion y de los obstaculos para que no traspasen paredes 
 
         #Atacar al jugador 
-        if distancia < constantes.RANGO_ATAQUE and jugador.golpe == False: 
+        if distancia < constantes.RANGO_ATAQUE and jugador.golpe == False:
             jugador.energia -= 10
             jugador.golpe = True
             jugador.ultimo_golpe = pygame.time.get_ticks()

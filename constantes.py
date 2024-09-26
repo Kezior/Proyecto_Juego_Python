@@ -3,7 +3,7 @@ HEIGHT_WINDOW  = 1080  #Alto
 WIDHT_WINDOW = 1920    #Ancho
 #HEIGHT_PERSONAJE = 20 
 #WIDHT_PERSONAJE = 20 
-SCALE_PERSONAJE = 1.2
+SCALE_PERSONAJE = 1.45
 SCALE_ENEMIGOS = 1.4
 SCALE_ARMA = 0.8
 SCALE_BALA = 0.15
@@ -35,11 +35,11 @@ BACKGROUND_GAME_OVER = "assets/images/fondo/game_over.png"
 BACKGROUND_WIN = "assets/images/fondo/win.png"
 
 #Otros 
-VELOCIDAD = 40  #Velocidad del personaje
-VELOCIDAD_ENEMIGOS = 3 #Velocidad de los enemigos 
-RANGO = 200    #Que usaremos para determinar hasta que punto los enemigos nos detectan
+VELOCIDAD = 15  #Velocidad del personaje
+VELOCIDAD_ENEMIGOS = 5 #Velocidad de los enemigos 
+RANGO = 2000    #Que usaremos para determinar hasta que punto los enemigos nos detectan
 RANGO_ATAQUE = 20 #Distancia a al que los enemigos empezaran a atacar 
-VELOCIDAD_BALAS = 20
+VELOCIDAD_BALAS = 40
 COOLDOWN_BALAS = 200
 FPS = 120
 COORDENADAS = {"1":(800,2200), "2":(800,2200), "3":(800,2200)}  #Creamos una constante que este guardando las coordenadas donde queremos que aparezca nuestro personaje 

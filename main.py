@@ -214,14 +214,16 @@ for eni in tipo_enemigos:
         if eni == "skeleton2":
             img_enemigo = escalar_img(img_enemigo, 1.5)
         if eni == "golem_blue":
-            img_enemigo = escalar_img(img_enemigo, 1.5)
+            img_enemigo = escalar_img(img_enemigo, 2.5)
         if eni == "golem_orange":
-            img_enemigo = escalar_img(img_enemigo, 1.5)
-        if eni == "boss_dark_samurai":
-            img_enemigo = escalar_img(img_enemigo, 1.5)
+            img_enemigo = escalar_img(img_enemigo, 2.5)
+        if eni == "Boss(DarkSamurai)":
+            img_enemigo = escalar_img(img_enemigo, 2.5)
         if eni == "Boss(final)":
-            img_enemigo = escalar_img(img_enemigo, 1.5)
-
+            img_enemigo = escalar_img(img_enemigo, 2.5)
+        if eni == "Boss(Demon)":
+            img_enemigo = escalar_img(img_enemigo, 2)
+        
         else:
             img_enemigo = escalar_img(img_enemigo, constantes.SCALE_ENEMIGOS)
 
