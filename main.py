@@ -267,13 +267,6 @@ for i in range(num_coin_images):
 #Creamos una lista que guarde las animaciones/imagenes de los items para luego llamarlos en las clases
 item_images = [coin_images, [posion_roja]]   #Se comporta como listas, y como la posicion roja es solo una imagen y no un conjunto de imagenes es importante transformarlo en lista o dara error 
 
-# Cargar imágenes del portal
-portal_images = []
-for i in range(8):  # Asumiendo que tienes 8 imágenes para la animación del portal
-    img = pygame.image.load(f"assets/images/portal/portal_ ({i+1}).png").convert_alpha()
-    img = escalar_img(img, constantes.SCALE_PORTAL)  # Asegúrate de definir SCALE_PORTAL en constantes.py
-    portal_images.append(img)
-
 #Cargar la imagen del Game Over
 game_over_image = pygame.image.load(constantes.BACKGROUND_GAME_OVER).convert_alpha()
 game_over_image = pygame.transform.scale(game_over_image, (constantes.WIDHT_WINDOW, constantes.HEIGHT_WINDOW))
@@ -281,6 +274,14 @@ game_over_image = pygame.transform.scale(game_over_image, (constantes.WIDHT_WIND
 #Cargar la imagen de la victoria
 win_image = pygame.image.load(constantes.BACKGROUND_WIN).convert_alpha()
 win_image = pygame.transform.scale(win_image, (constantes.WIDHT_WINDOW, constantes.HEIGHT_WINDOW))
+
+# Cargar imágenes del portal /CORREGIR USANDO LA FUNCION DE CONTAR ELEMENTOS PARA QUE SEA DINAMICO Y AUTOMATICO
+portal_images = []
+for i in range(8):
+    img = pygame.image.load(f"assets/images/portal/portal_ ({i+1}).png").convert_alpha()
+    img = escalar_img(img, constantes.SCALE_PORTAL)
+    portal_images.append(img)
+
 
 #Cargamos en una variable cada capa del mundo / Usando la funcion que se encarga de cargar el csv del mapa
 world_data_fondo = cargar_csv(f"niveles/nivel_{nivel}_fondo.csv")

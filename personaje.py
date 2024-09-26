@@ -50,7 +50,6 @@ class Personaje(): #Las clases siempre la primera en mayuscula
 
         #Calculamos la distancia de los enemigos respecto del personaje para determinar cuando nos deben seguir usando pitagoras 
         distancia = math.sqrt(((self.shape.centerx - jugador.shape.centerx)**2) + (self.shape.centery - jugador.shape.centery)**2 )
-        # ... (código existente) ...
         if not clipped_line and distancia < self.rango_vision:
             if self.shape.centerx > jugador.shape.centerx:
                 ene_dx = -self.velocidad  # Cambiado

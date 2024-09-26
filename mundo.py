@@ -27,7 +27,7 @@ class Mundo():
         self.lista_enemigo =[]
         self.puertas_cerradas_tiles = []
 
-    def process_data(self, data_fondo, data_principal, tile_list, item_imagenes, animaciones_enemigos, portal_images ):
+    def process_data(self, data_fondo, data_principal, tile_list, item_imagenes, animaciones_enemigos, portal_images):
         self.level_length = len(data_principal[0])
         self.portal_images = portal_images
 
