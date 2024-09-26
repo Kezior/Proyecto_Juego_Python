@@ -19,14 +19,18 @@ class Mundo():
         self.capa_principal = []
         self.obstaculos_tiles = []
         self.exit_tile = None #Este lo usaremos para que el personaje pase de un nivel al otro, cuando toque ese tile
+        self.portal_images = None
+        self.portal_frame_index = 0
+        self.portal_update_time = pygame.time.get_ticks()
         self.win_tile = None
         self.lista_item = []
         self.lista_enemigo =[]
         self.puertas_cerradas_tiles = []
 
-    def process_data(self, data_fondo, data_principal, tile_list, item_imagenes, animaciones_enemigos):
+    def process_data(self, data_fondo, data_principal, tile_list, item_imagenes, animaciones_enemigos, portal_images ):
         self.level_length = len(data_principal[0])
-        
+        self.portal_images = portal_images
+
         for y, row in enumerate(data_fondo):
             for x, tile in enumerate(row):
                 image = tile_list [tile]
@@ -55,8 +59,9 @@ class Mundo():
                     self.puertas_cerradas_tiles.append(tile_data)
 
                 #Tile de salida 
-                elif tile == 1197:    #El numero es el ID del tile que queremos que funciones como exit 
-                    self.exit_tile = tile_data
+                elif tile == 1197:    #El numero es el ID del tile que queremos que funciona como exit 
+                    self.exit_tile = [self.portal_images[0], pygame.Rect(image_x, image_y, constantes.TILE_SIZE, constantes.TILE_SIZE), image_x, image_y]
+                    tile_data[0] = tile_list[510] 
 
                 elif tile == 1053:
                     self.win_tile = tile_data
@@ -141,7 +146,6 @@ class Mundo():
                     return True
         return False
 
-
     def update(self, posicion_pantalla):
         for tile in self.capa_principal :
             tile[2] += posicion_pantalla[0]
@@ -151,11 +155,22 @@ class Mundo():
             tile[2] += posicion_pantalla[0]
             tile[3] += posicion_pantalla[1]
             tile[1].center = (tile[2], tile[3])
-            
+        if self.exit_tile:
+            self.exit_tile[2] += posicion_pantalla[0]
+            self.exit_tile[3] += posicion_pantalla[1]
+            self.exit_tile[1].center = (self.exit_tile[2], self.exit_tile[3])
 
+            cooldown_animacion = 50  # Ajusta este valor para cambiar la velocidad de la animación
+            if pygame.time.get_ticks() - self.portal_update_time > cooldown_animacion:
+                self.portal_frame_index = (self.portal_frame_index + 1) % len(self.portal_images)
+                self.exit_tile[0] = self.portal_images[self.portal_frame_index]
+                self.portal_update_time = pygame.time.get_ticks()
+         
     def draw(self, surface):
         for tile in self.capa_fondo:
             surface.blit(tile[0], tile[1])  
         for tile in self.capa_principal:
-            surface.blit(tile[0], tile[1])   
+            surface.blit(tile[0], tile[1])  
+        if self.exit_tile:
+            surface.blit(self.exit_tile[0], self.exit_tile[1]) 
     

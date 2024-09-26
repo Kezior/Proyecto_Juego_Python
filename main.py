@@ -132,7 +132,7 @@ def reiniciar_juego():
     world_data_principal = cargar_csv(f"niveles/nivel_{nivel}_principal.csv")
 
     world = Mundo()
-    world.process_data(world_data_fondo, world_data_principal, tile_list, item_images, animaciones_enemigos)
+    world.process_data(world_data_fondo, world_data_principal, tile_list, item_images, animaciones_enemigos, portal_images)
     jugador.actualizar_coordenadas(constantes.COORDENADAS[str(nivel)])
 
     lista_enemigos = []
@@ -267,6 +267,13 @@ for i in range(num_coin_images):
 #Creamos una lista que guarde las animaciones/imagenes de los items para luego llamarlos en las clases
 item_images = [coin_images, [posion_roja]]   #Se comporta como listas, y como la posicion roja es solo una imagen y no un conjunto de imagenes es importante transformarlo en lista o dara error 
 
+# Cargar imágenes del portal
+portal_images = []
+for i in range(8):  # Asumiendo que tienes 8 imágenes para la animación del portal
+    img = pygame.image.load(f"assets/images/portal/portal_ ({i+1}).png").convert_alpha()
+    img = escalar_img(img, constantes.SCALE_PORTAL)  # Asegúrate de definir SCALE_PORTAL en constantes.py
+    portal_images.append(img)
+
 #Cargar la imagen del Game Over
 game_over_image = pygame.image.load(constantes.BACKGROUND_GAME_OVER).convert_alpha()
 game_over_image = pygame.transform.scale(game_over_image, (constantes.WIDHT_WINDOW, constantes.HEIGHT_WINDOW))
@@ -281,7 +288,7 @@ world_data_principal = cargar_csv(f"niveles/nivel_{nivel}_principal.csv")
 
 #Creamos la variable de la clase Mundo, y llamamos su metodo que creamos para procesar la informacion relacionada al mundo 
 world = Mundo()
-world.process_data(world_data_fondo, world_data_principal, tile_list, item_images, animaciones_enemigos)
+world.process_data(world_data_fondo, world_data_principal, tile_list, item_images, animaciones_enemigos, portal_images)
 
 #Crear un jugador de la clase personaje
 jugador = Personaje(constantes.COORDENADAS[str(nivel)][0], constantes.COORDENADAS[str(nivel)][1], animaciones, 50, 1) #Creamos una varable usando la clase que importamos del personaje, dandole las coordenadas x y y dentro del argumento
@@ -510,7 +517,7 @@ while run == True:
                 world_data_principal = cargar_csv(f"niveles/nivel_{nivel}_principal.csv")
 
                 world = Mundo()
-                world.process_data(world_data_fondo, world_data_principal, tile_list, item_images, animaciones_enemigos)
+                world.process_data(world_data_fondo, world_data_principal, tile_list, item_images, animaciones_enemigos, portal_images)
                 jugador.actualizar_coordenadas(constantes.COORDENADAS[str(nivel)])  #Le estaremos entregando las coordenadas de la tupla, que se entra x y y dentor de parentesis 
 
                 #Crear lista de enemigos 
