@@ -138,19 +138,19 @@ class Personaje(): #Las clases siempre la primera en mayuscula
 
             #Actualizar la pantalla basado en la posicion del jugadr 
             #Mover la camara a la izquierda o derecha 
-            if self.shape.right > (constantes.WIDHT_WINDOW - constantes.LIMITE_PANTALLA * 2): 
-                posicion_pantalla[0] = (constantes.WIDHT_WINDOW - constantes.LIMITE_PANTALLA) - self.shape.right
-                self.shape.right = constantes.WIDHT_WINDOW - constantes.LIMITE_PANTALLA
-            if self.shape.left < 2 * constantes.LIMITE_PANTALLA:
-                posicion_pantalla[0] = constantes.LIMITE_PANTALLA - self.shape.left
-                self.shape.left = constantes.LIMITE_PANTALLA
+            if self.shape.right > (constantes.WIDHT_WINDOW - constantes.LIMITE_PANTALLA_X): 
+                posicion_pantalla[0] = (constantes.WIDHT_WINDOW - constantes.LIMITE_PANTALLA_X) - self.shape.right
+                self.shape.right = constantes.WIDHT_WINDOW - constantes.LIMITE_PANTALLA_X
+            if self.shape.left < constantes.LIMITE_PANTALLA_X:
+                posicion_pantalla[0] = constantes.LIMITE_PANTALLA_X - self.shape.left
+                self.shape.left = constantes.LIMITE_PANTALLA_X
 
-            #Mover la camara a la izquierda o derecha 
-            if self.shape.bottom > (constantes.HEIGHT_WINDOW - constantes.LIMITE_PANTALLA): 
-                posicion_pantalla[1] = (constantes.HEIGHT_WINDOW - constantes.LIMITE_PANTALLA) - self.shape.bottom
-                self.shape.bottom = constantes.HEIGHT_WINDOW - constantes.LIMITE_PANTALLA
-            if self.shape.top < constantes.LIMITE_PANTALLA:
-                posicion_pantalla[1] = constantes.LIMITE_PANTALLA - self.shape.top
-                self.shape.top = constantes.LIMITE_PANTALLA
+            #Mover la camara arriba o abajo
+            if self.shape.bottom > (constantes.HEIGHT_WINDOW - constantes.LIMITE_PANTALLA_Y): 
+                posicion_pantalla[1] = (constantes.HEIGHT_WINDOW - constantes.LIMITE_PANTALLA_Y) - self.shape.bottom
+                self.shape.bottom = constantes.HEIGHT_WINDOW - constantes.LIMITE_PANTALLA_Y
+            if self.shape.top < constantes.LIMITE_PANTALLA_Y:
+                posicion_pantalla[1] = constantes.LIMITE_PANTALLA_Y - self.shape.top
+                self.shape.top = constantes.LIMITE_PANTALLA_Y
 
             return posicion_pantalla, nivel_completado
