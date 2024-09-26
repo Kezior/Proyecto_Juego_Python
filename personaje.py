@@ -3,7 +3,7 @@ import math
 import constantes
 
 class Personaje(): #Las clases siempre la primera en mayuscula
-    def __init__(self, x, y, animaciones, energia, tipo):   #Estariamos llamando al constructor de pygame 
+    def __init__(self, x, y, animaciones, energia, tipo, daño=10, rango_vision=constantes.RANGO, velocidad=constantes.VELOCIDAD_ENEMIGOS):   #Estariamos llamando al constructor de pygame 
         self.score = 0
         self.energia = energia
         self.vivo = True
@@ -20,6 +20,9 @@ class Personaje(): #Las clases siempre la primera en mayuscula
         self.tipo = tipo
         self.golpe = False  #Para identificar cuando un jugador sea golpeado
         self.ultimo_golpe = pygame.time.get_ticks()  #Lo usaremos para el cooldown entre ataques de los enemigos 
+        self.daño = daño
+        self.rango_vision = rango_vision
+        self.velocidad = velocidad
 
     def actualizar_coordenadas(self, tupla):
         self.shape.center = (tupla[0], tupla[1])
@@ -47,23 +50,22 @@ class Personaje(): #Las clases siempre la primera en mayuscula
 
         #Calculamos la distancia de los enemigos respecto del personaje para determinar cuando nos deben seguir usando pitagoras 
         distancia = math.sqrt(((self.shape.centerx - jugador.shape.centerx)**2) + (self.shape.centery - jugador.shape.centery)**2 )
-        if not clipped_line and distancia < constantes.RANGO:
-            #Condicio que identifica cuando el jugador esta mas a la derecha o izquierda del enemigo y lo persiga o se mueva hacia el 
+        # ... (código existente) ...
+        if not clipped_line and distancia < self.rango_vision:
             if self.shape.centerx > jugador.shape.centerx:
-                ene_dx = -constantes.VELOCIDAD_ENEMIGOS 
+                ene_dx = -self.velocidad  # Cambiado
             if self.shape.centerx < jugador.shape.centerx:
-                ene_dx = constantes.VELOCIDAD_ENEMIGOS
-            #Condicio que identifica cuando el jugador esta arriba o debajo del enemigo y lo persiga o se mueva hacia el 
+                ene_dx = self.velocidad  # Cambiado
             if self.shape.centery > jugador.shape.centery:
-                ene_dy = -constantes.VELOCIDAD_ENEMIGOS  
+                ene_dy = -self.velocidad  # Cambiado
             if self.shape.centery < jugador.shape.centery:
-                ene_dy = constantes.VELOCIDAD_ENEMIGOS 
+                ene_dy = self.velocidad  # Cambiado
 
         self.movimiento(ene_dx, ene_dy, obstaculos_tiles, exit_tile, win_tile)  #Usamos el metodo ya creado de movimiento en el que le entregamos las variables de su posicion y de los obstaculos para que no traspasen paredes 
 
         #Atacar al jugador 
         if distancia < constantes.RANGO_ATAQUE and jugador.golpe == False:
-            jugador.energia -= 10
+            jugador.energia -= self.daño
             jugador.golpe = True
             jugador.ultimo_golpe = pygame.time.get_ticks()
 

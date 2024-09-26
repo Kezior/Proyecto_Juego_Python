@@ -73,59 +73,49 @@ class Mundo():
                     posion = Item(image_x, image_y, 1, item_imagenes[1])
                     self.lista_item.append(posion)
                     tile_data[0] = tile_list[508]
-                    
-                #CREAR LOS ENEMIGOS RESPECTO A SU NOMBRE EN LA CARPETA
+                                 #CREAR LOS ENEMIGOS RESPECTO A SU NOMBRE EN LA CARPETA
                 #Enemigos base
-                elif tile ==  1292:   #Importante este numero es el ID del tile que identificamos para nuestro personaje dentro del tileset y que ponemos en el mapa 
-                    skeleton = Personaje(image_x, image_y, animaciones_enemigos[8], 200, 2)    #Importante recordar que en las animaciones "[x]" es el numero con el que estamos identificando, el 200 es la energia o vida que le asignamos, y el ultimo dato es el tipo de enemigo de esta clase que tambien depende de como los estemos identificando en el archivo personaje.py
-                    #Importante, en la lista de animaciones_enemigos, que podemos ver en el main, cuando cargamos las imagenes de los "enemigos" el numero se esta tomando de la posicion de la lista, la cual es la misma que como se tienen las carpetas en los archivos del juego 
+                elif tile ==  1292:
+                    skeleton = Personaje(image_x, image_y, animaciones_enemigos[8], 150, 2, 10, constantes.RANGO, 6)  
                     self.lista_enemigo.append(skeleton)
-                    #Recordar que tenemos que agregar a la lista el enemigo en cuestion (en este caso el honguito)
                     tile_data[0] = tile_list[508]
 
-                elif tile ==  1291:   #Importante este numero es el ID del tile que identificamos para nuestro personaje dentro del tileset y que ponemos en el mapa 
-                    skeleton2 = Personaje(image_x, image_y, animaciones_enemigos[9], 300, 2)    #Importante recordar que en las animaciones "[x]" es el numero con el que estamos identificando, el 200 es la energia o vida que le asignamos, y el ultimo dato es el tipo de enemigo de esta clase que tambien depende de como los estemos identificando en el archivo personaje.py
-                    #Importante, en la lista de animaciones_enemigos, que podemos ver en el main, cuando cargamos las imagenes de los "enemigos" el numero se esta tomando de la posicion de la lista, la cual es la misma que como se tienen las carpetas en los archivos del juego 
+                elif tile ==  1291:
+                    skeleton2 = Personaje(image_x, image_y, animaciones_enemigos[9], 100, 2, 15, constantes.RANGO, 6)  
                     self.lista_enemigo.append(skeleton2)
-                    #Recordar que tenemos que agregar a la lista el enemigo en cuestion (en este caso el jefe_final1)
                     tile_data[0] = tile_list[508]
 
-                elif tile ==  1338:   #Importante este numero es el ID del tile que identificamos para nuestro personaje dentro del tileset y que ponemos en el mapa 
-                    golem_blue = Personaje(image_x, image_y, animaciones_enemigos[5], 300, 2)    #Importante recordar que en las animaciones "[x]" es el numero con el que estamos identificando, el 200 es la energia o vida que le asignamos, y el ultimo dato es el tipo de enemigo de esta clase que tambien depende de como los estemos identificando en el archivo personaje.py
-                    #Importante, en la lista de animaciones_enemigos, que podemos ver en el main, cuando cargamos las imagenes de los "enemigos" el numero se esta tomando de la posicion de la lista, la cual es la misma que como se tienen las carpetas en los archivos del juego 
+                elif tile ==  1338:
+                    golem_blue = Personaje(image_x, image_y, animaciones_enemigos[5], 200, 2, 20, constantes.RANGO, 5)  
                     self.lista_enemigo.append(golem_blue)
-                    #Recordar que tenemos que agregar a la lista el enemigo en cuestion (en este caso el jefe_final1)
                     tile_data[0] = tile_list[559]
 
-                elif tile ==  1339:   #Importante este numero es el ID del tile que identificamos para nuestro personaje dentro del tileset y que ponemos en el mapa 
-                    golem_orange = Personaje(image_x, image_y, animaciones_enemigos[6], 300, 2)    #Importante recordar que en las animaciones "[x]" es el numero con el que estamos identificando, el 200 es la energia o vida que le asignamos, y el ultimo dato es el tipo de enemigo de esta clase que tambien depende de como los estemos identificando en el archivo personaje.py
-                    #Importante, en la lista de animaciones_enemigos, que podemos ver en el main, cuando cargamos las imagenes de los "enemigos" el numero se esta tomando de la posicion de la lista, la cual es la misma que como se tienen las carpetas en los archivos del juego 
+                elif tile ==  1339:
+                    golem_orange = Personaje(image_x, image_y, animaciones_enemigos[6], 200, 2, 20, constantes.RANGO, 5)  
                     self.lista_enemigo.append(golem_orange)
-                    #Recordar que tenemos que agregar a la lista el enemigo en cuestion (en este caso el jefe_final1)
                     tile_data[0] = tile_list[559]
 
                 #Jefes 
-                elif tile ==  1289:   #Importante este numero es el ID del tile que identificamos para nuestro personaje dentro del tileset y que ponemos en el mapa 
-                    boss_dark_samurai = Personaje(image_x, image_y, animaciones_enemigos[1], 300, 2)    #Importante recordar que en las animaciones "[x]" es el numero con el que estamos identificando, el 200 es la energia o vida que le asignamos, y el ultimo dato es el tipo de enemigo de esta clase que tambien depende de como los estemos identificando en el archivo personaje.py
-                    #Importante, en la lista de animaciones_enemigos, que podemos ver en el main, cuando cargamos las imagenes de los "enemigos" el numero se esta tomando de la posicion de la lista, la cual es la misma que como se tienen las carpetas en los archivos del juego 
+                elif tile ==  1289:
+                    boss_dark_samurai = Personaje(image_x, image_y, animaciones_enemigos[1], 500, 2, 40, constantes.RANGO, 8)  
                     self.lista_enemigo.append(boss_dark_samurai)
-                    #Recordar que tenemos que agregar a la lista el enemigo en cuestion (en este caso el jefe_final1)
                     tile_data[0] = tile_list[511]
                 
-                elif tile ==  1051:   #Importante este numero es el ID del tile que identificamos para nuestro personaje dentro del tileset y que ponemos en el mapa 
-                    boss_final = Personaje(image_x, image_y, animaciones_enemigos[3], 300, 2)    #Importante recordar que en las animaciones "[x]" es el numero con el que estamos identificando, el 200 es la energia o vida que le asignamos, y el ultimo dato es el tipo de enemigo de esta clase que tambien depende de como los estemos identificando en el archivo personaje.py
-                    #Importante, en la lista de animaciones_enemigos, que podemos ver en el main, cuando cargamos las imagenes de los "enemigos" el numero se esta tomando de la posicion de la lista, la cual es la misma que como se tienen las carpetas en los archivos del juego 
+                elif tile ==  1051:
+                    boss_final = Personaje(image_x, image_y, animaciones_enemigos[3], 800, 2, 80, constantes.RANGO, 10)  
                     self.lista_enemigo.append(boss_final)
-                    #Recordar que tenemos que agregar a la lista el enemigo en cuestion (en este caso el jefe_final1)
                     tile_data[0] = tile_list[1170]
 
-                elif tile ==  1050:   #Importante este numero es el ID del tile que identificamos para nuestro personaje dentro del tileset y que ponemos en el mapa 
-                    boss_demon = Personaje(image_x, image_y, animaciones_enemigos[2], 300, 2)    #Importante recordar que en las animaciones "[x]" es el numero con el que estamos identificando, el 200 es la energia o vida que le asignamos, y el ultimo dato es el tipo de enemigo de esta clase que tambien depende de como los estemos identificando en el archivo personaje.py
-                    #Importante, en la lista de animaciones_enemigos, que podemos ver en el main, cuando cargamos las imagenes de los "enemigos" el numero se esta tomando de la posicion de la lista, la cual es la misma que como se tienen las carpetas en los archivos del juego 
+                elif tile ==  1050:
+                    boss_demon = Personaje(image_x, image_y, animaciones_enemigos[2], 750, 2, 40, constantes.RANGO, 9)  
                     self.lista_enemigo.append(boss_demon)
-                    #Recordar que tenemos que agregar a la lista el enemigo en cuestion (en este caso el jefe_final1)
                     tile_data[0] = tile_list[520]
-                    
+
+                elif tile ==  857:
+                    zapallo = Personaje(image_x, image_y, animaciones_enemigos[10], 1000, 2, 1000, constantes.RANGO, 20)  
+                    self.lista_enemigo.append(zapallo)
+                    tile_data[0] = tile_list[526]
+                
                 self.capa_principal.append(tile_data)
 
 

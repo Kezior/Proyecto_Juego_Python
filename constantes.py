@@ -37,8 +37,8 @@ BACKGROUND_WIN = "assets/images/fondo/win.png"
 #Otros 
 VELOCIDAD = 15  #Velocidad del personaje
 VELOCIDAD_ENEMIGOS = 5 #Velocidad de los enemigos 
-RANGO = 2000    #Que usaremos para determinar hasta que punto los enemigos nos detectan
-RANGO_ATAQUE = 20 #Distancia a al que los enemigos empezaran a atacar 
+RANGO = 4000    #Que usaremos para determinar hasta que punto los enemigos nos detectan
+RANGO_ATAQUE = 100 #Distancia a al que los enemigos empezaran a atacar 
 VELOCIDAD_BALAS = 40
 COOLDOWN_BALAS = 200
 FPS = 120

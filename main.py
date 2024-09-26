@@ -142,8 +142,6 @@ def reiniciar_juego():
     grupo_items.empty()
     for item in world.lista_item:
         grupo_items.add(item)
-    
-
 #VARIABLES 
 #Variable para las camaras, le damos los valores de 0, 0 que serian eje x y eje y
 posicion_pantalla = [0, 0] 
@@ -220,9 +218,11 @@ for eni in tipo_enemigos:
         if eni == "Boss(DarkSamurai)":
             img_enemigo = escalar_img(img_enemigo, 2.5)
         if eni == "Boss(final)":
-            img_enemigo = escalar_img(img_enemigo, 2.5)
-        if eni == "Boss(Demon)":
             img_enemigo = escalar_img(img_enemigo, 2)
+        if eni == "Boss(Demon)":
+            img_enemigo = escalar_img(img_enemigo, 1.5)
+        if eni == "zapallo":
+            img_enemigo = escalar_img(img_enemigo, 1)
         
         else:
             img_enemigo = escalar_img(img_enemigo, constantes.SCALE_ENEMIGOS)
