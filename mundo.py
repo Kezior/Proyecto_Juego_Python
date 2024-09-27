@@ -23,13 +23,17 @@ class Mundo():
         self.portal_frame_index = 0
         self.portal_update_time = pygame.time.get_ticks()
         self.win_tile = None
+        self.win_images = None
+        self.win_frame_index = 0
+        self.win_update_time = pygame.time.get_ticks()
         self.lista_item = []
         self.lista_enemigo =[]
         self.puertas_cerradas_tiles = []
 
-    def process_data(self, data_fondo, data_principal, tile_list, item_imagenes, animaciones_enemigos, portal_images):
+    def process_data(self, data_fondo, data_principal, tile_list, item_imagenes, animaciones_enemigos, portal_images, win_images):
         self.level_length = len(data_principal[0])
         self.portal_images = portal_images
+        self.win_images = win_images
 
         for y, row in enumerate(data_fondo):
             for x, tile in enumerate(row):
@@ -60,11 +64,15 @@ class Mundo():
 
                 #Tile de salida 
                 elif tile == 1197:    #El numero es el ID del tile que queremos que funciona como exit 
-                    self.exit_tile = [self.portal_images[0], pygame.Rect(image_x, image_y, constantes.TILE_SIZE, constantes.TILE_SIZE), image_x, image_y]
-                    tile_data[0] = tile_list[510] 
+                    image_portal = self.portal_images[0]
+                    self.exit_tile = [self.portal_images[0], image_portal.get_rect(), image_x, image_y]    # pygame.Rect(image_x, image_y, constantes.TILE_SIZE, constantes.TILE_SIZE)
+                    tile_data[0] = tile_list[826] 
 
+                #Tile de win
                 elif tile == 1053:
-                    self.win_tile = tile_data
+                    image_win = self.win_images[0]
+                    self.win_tile = [self.win_images[0], image_win.get_rect(), image_x, image_y]    # pygame.Rect(image_x, image_y, constantes.TILE_SIZE, constantes.TILE_SIZE)
+                    tile_data[0] = tile_list[235] 
 
                 #CREAR ITEMS
                 #Condicion para crear las monedas
@@ -107,7 +115,7 @@ class Mundo():
                     tile_data[0] = tile_list[511]
                 
                 elif tile ==  1051:
-                    boss_final = Personaje(image_x, image_y, animaciones_enemigos[3], 800, 2, 80, constantes.RANGO, 10)  
+                    boss_final = Personaje(image_x, image_y, animaciones_enemigos[3], 800, 2, 70, constantes.RANGO, 10)  
                     self.lista_enemigo.append(boss_final)
                     tile_data[0] = tile_list[1170]
 
@@ -165,6 +173,17 @@ class Mundo():
                 self.portal_frame_index = (self.portal_frame_index + 1) % len(self.portal_images)
                 self.exit_tile[0] = self.portal_images[self.portal_frame_index]
                 self.portal_update_time = pygame.time.get_ticks()
+        
+        if self.win_tile:
+            self.win_tile[2] += posicion_pantalla[0]
+            self.win_tile[3] += posicion_pantalla[1]
+            self.win_tile[1].center = (self.win_tile[2], self.win_tile[3])
+
+            cooldown_animacion = 50  # Ajusta este valor para cambiar la velocidad de la animación
+            if pygame.time.get_ticks() - self.win_update_time > cooldown_animacion:
+                self.win_frame_index = (self.win_frame_index + 1) % len(self.win_images)
+                self.win_tile[0] = self.win_images[self.win_frame_index]
+                self.win_update_time = pygame.time.get_ticks()
          
     def draw(self, surface):
         for tile in self.capa_fondo:
@@ -173,4 +192,5 @@ class Mundo():
             surface.blit(tile[0], tile[1])  
         if self.exit_tile:
             surface.blit(self.exit_tile[0], self.exit_tile[1]) 
-    
+        if self.win_tile:
+            surface.blit(self.win_tile[0], self.win_tile[1]) 

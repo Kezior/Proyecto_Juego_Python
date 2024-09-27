@@ -11,6 +11,7 @@ SCALE_CORAZON = 3
 SCALE_POSION = 0.8
 SCALE_MONEDA = 1.3
 SCALE_PORTAL = 1.5
+SCALE_WIN_PORTAL = 3
 TILE_SIZE = 40 
 TILE_TYPE = 1920       #ES LA CANTIDAD DE TILES QUE SE TIENE EN LA CARPETA 
 FILAS = 240 
@@ -28,7 +29,7 @@ BLANCO = (255, 255, 255)
 ROJO_OSCURO = (139, 0, 0)
 NEGRO = (0, 0, 0)
 AMARILLO = (255, 255, 0)
-COLOR_FONDO = (0, 0, 0)
+COLOR_FONDO = (47, 47, 46)
 
 #Fondos
 BACKGROUND_MENU_INICIO = "assets/images/fondo/menu.png"
@@ -36,7 +37,7 @@ BACKGROUND_GAME_OVER = "assets/images/fondo/game_over.png"
 BACKGROUND_WIN = "assets/images/fondo/win.png"
 
 #Otros 
-VELOCIDAD = 15  #Velocidad del personaje
+VELOCIDAD = 40  #Velocidad del personaje
 VELOCIDAD_ENEMIGOS = 5 #Velocidad de los enemigos 
 RANGO = 4000    #Que usaremos para determinar hasta que punto los enemigos nos detectan
 RANGO_ATAQUE = 100 #Distancia a al que los enemigos empezaran a atacar 

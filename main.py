@@ -132,7 +132,7 @@ def reiniciar_juego():
     world_data_principal = cargar_csv(f"niveles/nivel_{nivel}_principal.csv")
 
     world = Mundo()
-    world.process_data(world_data_fondo, world_data_principal, tile_list, item_images, animaciones_enemigos, portal_images)
+    world.process_data(world_data_fondo, world_data_principal, tile_list, item_images, animaciones_enemigos, portal_images, win_images)
     jugador.actualizar_coordenadas(constantes.COORDENADAS[str(nivel)])
 
     lista_enemigos = []
@@ -142,6 +142,8 @@ def reiniciar_juego():
     grupo_items.empty()
     for item in world.lista_item:
         grupo_items.add(item)
+
+        
 #VARIABLES 
 #Variable para las camaras, le damos los valores de 0, 0 que serian eje x y eje y
 posicion_pantalla = [0, 0] 
@@ -167,7 +169,7 @@ boton_salir = pygame.Rect(constantes.WIDHT_WINDOW / 2 - 80, constantes.HEIGHT_WI
 
 #BOTON DE REINICIO
 # Definir el rectángulo para el botón de reinicio
-boton_reinicio = pygame.Rect(constantes.WIDHT_WINDOW / 2 - 100, constantes.HEIGHT_WINDOW / 2 + 280, 200, 50)
+boton_reinicio = pygame.Rect(constantes.WIDHT_WINDOW / 2 - 200, constantes.HEIGHT_WINDOW / 2 + 250, 400, 80)
 
 
 #Fuentes que usaremos en el juego 
@@ -284,6 +286,15 @@ for i in range(num_portal_img):
     img = escalar_img(img, constantes.SCALE_PORTAL)
     portal_images.append(img)
 
+#Cargar imágenes del win 
+win_images = []
+ruta_win_img = "assets/images/portal_win"
+num_win_img = contar_elementos(ruta_win_img)
+for i in range(num_win_img):
+    img = pygame.image.load(f"assets/images/portal_win/portal_win_ ({i+1}).png").convert_alpha()
+    img = escalar_img(img, constantes.SCALE_WIN_PORTAL)
+    win_images.append(img)
+
 
 #Cargamos en una variable cada capa del mundo / Usando la funcion que se encarga de cargar el csv del mapa
 world_data_fondo = cargar_csv(f"niveles/nivel_{nivel}_fondo.csv")
@@ -291,10 +302,10 @@ world_data_principal = cargar_csv(f"niveles/nivel_{nivel}_principal.csv")
 
 #Creamos la variable de la clase Mundo, y llamamos su metodo que creamos para procesar la informacion relacionada al mundo 
 world = Mundo()
-world.process_data(world_data_fondo, world_data_principal, tile_list, item_images, animaciones_enemigos, portal_images)
+world.process_data(world_data_fondo, world_data_principal, tile_list, item_images, animaciones_enemigos, portal_images, win_images)
 
 #Crear un jugador de la clase personaje
-jugador = Personaje(constantes.COORDENADAS[str(nivel)][0], constantes.COORDENADAS[str(nivel)][1], animaciones, 50, 1, 0, 0, 0) #Creamos una varable usando la clase que importamos del personaje, dandole las coordenadas x y y dentro del argumento
+jugador = Personaje(constantes.COORDENADAS[str(nivel)][0], constantes.COORDENADAS[str(nivel)][1], animaciones, 100, 1, 0, 0, 0) #Creamos una varable usando la clase que importamos del personaje, dandole las coordenadas x y y dentro del argumento
 
 """""
 De esta forma estamos creando los enemigos de forma manual pero lo haremos automatico relacionando tiles en el mapa 
@@ -390,7 +401,7 @@ while run == True:
     elif jugador.win == True:
         cambiar_musica(musica_win)
         ventana.blit(win_image, (0, 0))
-        pygame.draw.rect(ventana, constantes.BLANCO, boton_reinicio, 2, 15)
+        #pygame.draw.rect(ventana, constantes.BLANCO, boton_reinicio, 2, 15)
         pygame.display.update()
 
         for event in pygame.event.get():
@@ -520,7 +531,7 @@ while run == True:
                 world_data_principal = cargar_csv(f"niveles/nivel_{nivel}_principal.csv")
 
                 world = Mundo()
-                world.process_data(world_data_fondo, world_data_principal, tile_list, item_images, animaciones_enemigos, portal_images)
+                world.process_data(world_data_fondo, world_data_principal, tile_list, item_images, animaciones_enemigos, portal_images, win_images)
                 jugador.actualizar_coordenadas(constantes.COORDENADAS[str(nivel)])  #Le estaremos entregando las coordenadas de la tupla, que se entra x y y dentor de parentesis 
 
                 #Crear lista de enemigos 
